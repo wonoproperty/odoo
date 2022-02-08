@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--    Expense Type Views -->
+
+    <record id="expense_type_view_form" model="ir.ui.view">
+        <field name="name">expense.type.form.view</field>
+        <field name="model">expense.type</field>
+        <field name="arch" type="xml">
+            <form string="Property Unit">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="expense_type_view_tree" model="ir.ui.view">
+        <field name="name">expense.type.tree.view</field>
+        <field name="model">expense.type</field>
+        <field name="arch" type="xml">
+            <tree string="Property Units" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="expense_type_view_action" model="ir.actions.act_window">
+        <field name="name">Expense Type</field>
+        <field name="res_model">expense.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="expense_type_view_tree"/>
+    </record>
+
+    <menuitem id="configuration_menu" name="Configuration" groups="base.group_user"
+              parent="wonoproperty_pms_menu" sequence="3"/>
+    <menuitem id="expense_type_menu" name="Expense Types" groups="base.group_user"
+              parent="configuration_menu" action="expense_type_view_action" sequence="1"/>
+</odoo>

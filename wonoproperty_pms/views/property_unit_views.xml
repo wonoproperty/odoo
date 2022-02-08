@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--    Property Unit Views -->
+
+    <record id="property_unit_view_form" model="ir.ui.view">
+        <field name="name">property.unit.form.view</field>
+        <field name="model">property.unit</field>
+        <field name="arch" type="xml">
+            <form string="Property Unit">
+                <header>
+                    <button string='Update Tenant' name="action_open_tenant_wizard" type="object" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Plan Name"/>
+                        <h1>
+                            <field name="name" placeholder="Property Name"/>
+                        </h1>
+                    </div>
+                    <group string="Information">
+                        <group>
+                            <field name="property_id"/>
+                            <field name="tenant_id"/>
+                            <field name="date_start"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="expenses" string="Expenses">
+                            <field name="expense_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="expense_id"/>
+                                    <field name="expense_frequency"/>
+                                    <field name="fixed_amount"/>
+                                    <field name="variable_amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="tenant" string="Tenant History">
+                            <field name="tenant_ids" nolabel="1" readonly="1">
+                                <tree>
+                                    <field name="tenant_id"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="water_reading" string="Water Odometer Reading">
+                            <field name="water_odometer_reading_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="date"/>
+                                    <field name="reading"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="property_unit_view_tree" model="ir.ui.view">
+        <field name="name">property.unit.tree.view</field>
+        <field name="model">property.unit</field>
+        <field name="arch" type="xml">
+            <tree string="Property Units">
+                <field name="name"/>
+                <field name="property_id"/>
+                <field name="tenant_id"/>
+                <field name="date_start"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="property_unit_view_action" model="ir.actions.act_window">
+        <field name="name">Property Units</field>
+        <field name="res_model">property.unit</field>
+        <field name="view_mode">tree,form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="property_unit_view_tree"/>
+    </record>
+
+    <menuitem id="property_unit_menu" name="Property Units" groups="base.group_user"
+              parent="wonoproperty_pms_menu" action="property_unit_view_action" sequence="2"/>
+</odoo>

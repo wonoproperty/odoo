@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="property_tenant_wizard_form_view" model="ir.ui.view">
+        <field name="name">property.tenant.wizard.form.view</field>
+        <field name="model">property.tenant.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Property Tenant Update">
+                <group>
+                    <group string="Last Tenant">
+                        <field name="current_tenant_id" readonly="1"/>
+                        <field name="current_date_start" readonly="1"/>
+                        <field name="current_date_end"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="New Tenant">
+                        <field name="new_tenant_id"/>
+                        <field name="new_date_start"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string='Update Tenant' name="update_tenant" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_property_tenant_wizard" model="ir.actions.act_window">
+        <field name="name">Property Tenant Wizard</field>
+        <field name="res_model">property.tenant.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="property_tenant_wizard_form_view"/>
+    </record>
+</odoo>
