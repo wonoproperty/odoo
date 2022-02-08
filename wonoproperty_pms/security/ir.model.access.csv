@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_property_property,access_property_property_user,model_property_property,base.group_user,1,1,1,1
+access_property_unit,access_property_unit_user,model_property_unit,base.group_user,1,1,1,1
+access_tenant_history,access_tenant_history_user,model_tenant_history,base.group_user,1,1,1,1
+access_unit_expense_line,access_unit_expense_line_user,model_unit_expense_line,base.group_user,1,1,1,1
+access_expense_type,access_expense_type_user,model_expense_type,base.group_user,1,1,1,1
+access_expense_type,access_expense_type_user,model_expense_type,base.group_user,1,1,1,1
+access_property_tenant_wizard,access_property_tenant_wizard,model_property_tenant_wizard,base.group_user,1,1,1,1
+access_water_odometer_reading,access_water_odometer_reading,model_water_odometer_reading,base.group_user,1,1,1,1
