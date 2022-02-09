@@ -13,7 +13,9 @@
         'views/property_unit_views.xml',
         'wizard/property_tenant_wizard_views.xml',
         'views/expense_type_views.xml',
+        'views/account_move_views.xml',
         'security/ir.model.access.csv'
     ],
-    'demo': []
+    'demo': [],
+    'license': 'LGPL-3'
 }
