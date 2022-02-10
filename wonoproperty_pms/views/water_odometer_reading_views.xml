@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="water_odometer_reading_view_form" model="ir.ui.view">
+        <field name="name">water.odometer.reading.form.view</field>
+        <field name="model">water.odometer.reading.history</field>
+        <field name="arch" type="xml">
+            <form string="Water Odometer Readings">
+                <sheet>
+                    <group string="Information">
+                        <group>
+                            <field name="property_unit_id"/>
+                            <field name="date"/>
+                            <field name="first_reading"/>
+                        </group>
+                        <group>
+                            <field name="tenant_id"/>
+                            <field name="reading"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="water_odometer_reading_view_tree" model="ir.ui.view">
+        <field name="name">water.odometer.reading.tree.view</field>
+        <field name="model">water.odometer.reading.history</field>
+        <field name="arch" type="xml">
+            <tree string="Property Units">
+                <field name="tenant_id"/>
+                <field name="property_unit_id"/>
+                <field name="date"/>
+                <field name="reading"/>
+                <field name="first_reading"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="water_odometer_reading_view_action" model="ir.actions.act_window">
+        <field name="name">Water Odometer Reading</field>
+        <field name="res_model">water.odometer.reading.history</field>
+        <field name="view_mode">tree,form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="water_odometer_reading_view_tree"/>
+    </record>
+</odoo>
