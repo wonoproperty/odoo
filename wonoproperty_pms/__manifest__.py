@@ -14,6 +14,7 @@
         'wizard/property_tenant_wizard_views.xml',
         'views/expense_type_views.xml',
         'views/account_move_views.xml',
+        'views/water_odometer_reading_views.xml',
         'security/ir.model.access.csv'
     ],
     'demo': [],

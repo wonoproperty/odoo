@@ -52,6 +52,10 @@
                                     <field name="tenant_id"/>
                                     <field name="date_start"/>
                                     <field name="date_end"/>
+                                    <field name="invoice_count" invisible="1"/>
+                                    <field name="water_odometer_readings_count" invisible="1"/>
+                                    <button string='View Invoices' name="action_view_invoice" type="object" class="btn-primary" attrs="{'invisible': [('invoice_count', '=', 0)]}"/>
+                                    <button string='View Water Readings' name="action_view_water_readings" type="object" class="btn-primary"  attrs="{'invisible': [('water_odometer_readings_count', '=', 0)]}"/>
                                 </tree>
                             </field>
                         </page>
@@ -60,6 +64,7 @@
                                 <tree editable="bottom">
                                     <field name="date"/>
                                     <field name="reading"/>
+                                    <field name="first_reading"/>
                                 </tree>
                             </field>
                         </page>

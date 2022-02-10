@@ -19,7 +19,7 @@ class PropertyUnit(models.Model):
     tenant_id = fields.Many2one('res.partner', string='Current Tenant')
     tenant_ids = fields.One2many('tenant.history', 'property_unit_id', string='Tenant History')
     invoice_ids = fields.One2many('account.move', 'property_unit_id', string='Invoices')
-    expense_ids = fields.One2many('unit.expense.line', 'property_unit_id', string='Expense Lines')
+    expense_ids = fields.One2many('unit.expense.line', 'property_unit_id', string='Expense Lines', copy=True)
     water_odometer_reading_ids = fields.One2many('water.odometer.reading', 'property_unit_id', string='Water Odometer Readings')
     complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
     invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced')
@@ -54,7 +54,6 @@ class PropertyUnit(models.Model):
                 for line in rec.expense_ids:
                     water_expense = self.env.ref('wonoproperty_pms.water_charges')
                     if line.expense_id.id != water_expense.id:
-                        expense = line.expense_id
                         frequency = line.expense_frequency
                         last_invoice = sorted(self.invoice_ids.filtered(lambda x: x.property_expense_id.id == line.expense_id.id), key=lambda x: x.date_to, reverse=True)
                         invoice_date = rec.date_start if not last_invoice else last_invoice[0].date_to + relativedelta(days=1)
@@ -132,7 +131,6 @@ class PropertyUnit(models.Model):
                                     ]
                                 })
                     else:
-                        expense = line.expense_id
                         frequency = line.expense_frequency
                         last_invoice = sorted(
                             self.invoice_ids.filtered(lambda x: x.property_expense_id.id == line.expense_id.id),
@@ -152,7 +150,7 @@ class PropertyUnit(models.Model):
                                                                 calendar.monthrange(invoice_date.year,
                                                                                     current_quarter_end_month)[
                                                                     1]).date()
-                            invoice_date = current_quarter_end_date
+                            invoice_date = current_quarter_end_date + relativedelta(days=1)
                             from_date = current_quarter_start_date
                             to_date = current_quarter_end_date
                         elif frequency == 'monthly':
@@ -162,21 +160,21 @@ class PropertyUnit(models.Model):
                                 invoice_date.year, current_month)[1]).date()
                             from_date = current_month_start_date
                             to_date = current_month_end_date
-                            invoice_date = current_month_end_date
+                            invoice_date = current_month_end_date + relativedelta(days=1)
                         else:
                             current_year_start = datetime(invoice_date.year, 1, 1).date()
                             current_year_end = datetime(invoice_date.year, 12, 31).date()
                             from_date = current_year_start
                             to_date = current_year_end
-                            invoice_date = current_year_end
+                            invoice_date = current_year_end + relativedelta(days=1)
                         date_end = rec.date_end if rec.date_end else to_date
                         if date_start != from_date or date_end != to_date:
                             from_date = date_start
                             to_date = date_end
                         if date_today >= invoice_date:
-                            if invoice_date <= to_date:
+                            if invoice_date <= to_date + relativedelta(days=1):
                                 odometer = sorted(rec.water_odometer_reading_ids.filtered(
-                                    lambda x: from_date <= x.date <= to_date),
+                                    lambda x: from_date <= x.date <= to_date and not x.first_reading),
                                     key=lambda x: x.date, reverse=True)
                                 if odometer:
                                     prev_odometer = sorted(
@@ -186,7 +184,7 @@ class PropertyUnit(models.Model):
                                     total_amount = (odometer[
                                                         0].reading - prev_odometer_reading) * line.variable_amount
                                     amount = total_amount
-                                    invoice_date = odometer[0].date
+                                    invoice_date = odometer[0].date + relativedelta(days=1)
                                     account_move = self.env['account.move']
                                     account_move.create({
                                         'move_type': 'out_invoice',
@@ -208,15 +206,13 @@ class PropertyUnit(models.Model):
                                         ]
                                     })
 
-
-
     @api.depends('invoice_ids')
     def _get_invoiced(self):
         for rec in self:
-            rec['invoice_count'] = len(rec.invoice_ids)
+            rec['invoice_count'] = len(rec.invoice_ids.filtered(lambda x: x.partner_id.id == rec.tenant_id.id))
 
     def action_view_invoice(self):
-        invoices = self.mapped('invoice_ids')
+        invoices = self.mapped('invoice_ids').filtered(lambda x: x.partner_id.id == self.tenant_id.id)
         action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
         if len(invoices) > 1:
             action['domain'] = [('id', 'in', invoices.ids)]
@@ -271,16 +267,6 @@ class PropertyUnit(models.Model):
         return month_range
 
 
-class TenantHistory(models.Model):
-    _name = 'tenant.history'
-    _description = 'Tenant History'
-
-    property_unit_id = fields.Many2one('property.unit', string='Property')
-    tenant_id = fields.Many2one('res.partner', string='Current Tenant', required=True)
-    date_start = fields.Date(string='Date Start', required=True)
-    date_end = fields.Date(string='Date End')
-
-
 class UnitExpenseLine(models.Model):
     _name = 'unit.expense.line'
     _description = 'Unit Expense Lines'
@@ -292,36 +278,3 @@ class UnitExpenseLine(models.Model):
                                           ('yearly', 'Yearly')], string='Frequency', required=True)
     fixed_amount = fields.Float(string='Fixed Amount')
     variable_amount = fields.Float(string='Variable Amount')
-
-
-class WaterOdometerReading(models.Model):
-    _name = 'water.odometer.reading'
-    _description = 'Water Odometer Reading'
-
-    property_unit_id = fields.Many2one('property.unit', string='Property')
-    date = fields.Date(string='Date', required=True)
-    reading = fields.Float(string='Reading')
-    invoiced = fields.Boolean(string='Invoiced')
-
-    @api.model
-    def create(self, vals_list):
-        res = super(WaterOdometerReading, self).create(vals_list)
-        meter_readings = res.search([('property_unit_id', '=', res.property_unit_id.id),
-                                     ('id', '!=', res.id)], order="date desc")
-        if len(meter_readings) > 0:
-            prev_reading = meter_readings[0].reading
-            if prev_reading:
-                if res.reading < prev_reading:
-                    raise UserError(_('Reading must be higher than previous reading of %s', str(prev_reading)))
-        return res
-
-    def write(self, vals):
-        res = super(WaterOdometerReading, self).write(vals)
-        meter_readings = self.search([('property_unit_id', '=', self.property_unit_id.id),
-                                      ('id', '!=', self.id)], order="date desc")
-        if len(meter_readings) > 0:
-            prev_reading = meter_readings[0].reading
-            if prev_reading:
-                if self.reading < prev_reading:
-                    raise UserError(_('Reading must be higher than previous reading of %s', str(prev_reading)))
-        return res
