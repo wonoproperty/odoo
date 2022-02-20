@@ -11,7 +11,7 @@ class TenantHistory(models.Model):
     _name = 'tenant.history'
     _description = 'Tenant History'
 
-    property_unit_id = fields.Many2one('property.unit', string='Property')
+    property_unit_id = fields.Many2one('property.unit', string='Property Unit')
     tenant_id = fields.Many2one('res.partner', string='Current Tenant', required=True)
     date_start = fields.Date(string='Date Start', required=True)
     date_end = fields.Date(string='Date End')

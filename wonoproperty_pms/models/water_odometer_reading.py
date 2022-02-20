@@ -48,7 +48,7 @@ class WaterOdometerReadingHistory(models.Model):
     _description = 'Water Odometer Reading'
     _order = 'date'
 
-    property_unit_id = fields.Many2one('property.unit', string='Property')
+    property_unit_id = fields.Many2one('property.unit', string='Property Unit')
     tenant_id = fields.Many2one('res.partner', string='Property')
     date = fields.Date(string='Date', required=True)
     reading = fields.Float(string='Reading')
