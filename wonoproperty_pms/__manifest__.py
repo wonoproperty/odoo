@@ -5,7 +5,7 @@
     'description': 'Add custom Property Management System for WonoProperty',
     'author': 'Maurice Jansz',
     'category': 'Property Management',
-    'version': '1.0.0',
+    'version': '1.0.1',
     'depends': ['account'],
     'data': [
         'data/expense_type_data.xml',
@@ -15,6 +15,7 @@
         'views/expense_type_views.xml',
         'views/account_move_views.xml',
         'views/water_odometer_reading_views.xml',
+        'views/res_partner_views.xml',
         'security/ir.model.access.csv'
     ],
     'demo': [],

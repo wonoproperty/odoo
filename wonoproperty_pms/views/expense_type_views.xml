@@ -11,6 +11,7 @@
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="product_id"/>
                         </group>
                     </group>
                 </sheet>
@@ -24,6 +25,7 @@
         <field name="arch" type="xml">
             <tree string="Property Units" editable="bottom">
                 <field name="name"/>
+                <field name="product_id"/>
             </tree>
         </field>
     </record>
