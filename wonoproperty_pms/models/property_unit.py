@@ -41,7 +41,7 @@ class PropertyUnit(models.Model):
         wizard_action = {
             'type': 'ir.actions.act_window',
             'res_model': 'property.tenant.wizard',
-            'name': _('Accrual Sale Orders'),
+            'name': _('Update Tenant'),
             'view_mode': 'form',
             'context': ctx,
             'target': 'new',
@@ -124,6 +124,7 @@ class PropertyUnit(models.Model):
                                     'property_expense_id': line.expense_id.id,
                                     'invoice_line_ids': [
                                         Command.create({
+                                            'product_id': line.expense_id.product_id.id,
                                             'name': line.expense_id.name,
                                             'price_unit': amount,
                                             'quantity': 1,
@@ -196,10 +197,9 @@ class PropertyUnit(models.Model):
                                         'property_expense_id': line.expense_id.id,
                                         'invoice_line_ids': [
                                             Command.create({
-                                                'name': line.expense_id.name + ' (Reading for month is ' + str(
-                                                    odometer[0].reading) + ' - ' + str(
-                                                    prev_odometer_reading) + ' = ' +
-                                                        str(odometer[0].reading - prev_odometer_reading) + ')',
+                                                'name': line.expense_id.name + ' (Reading for month is ' + "{:.2f}".format(odometer[0].reading) + ' - ' + "{:.2f}".format(prev_odometer_reading) + ' = ' +
+                                                        "{:.2f}".format(odometer[0].reading - prev_odometer_reading) + ')',
+                                                'product_id': line.expense_id.product_id.id,
                                                 'price_unit': amount,
                                                 'quantity': 1,
                                             })
