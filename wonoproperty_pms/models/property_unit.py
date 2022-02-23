@@ -23,6 +23,20 @@ class PropertyUnit(models.Model):
     water_odometer_reading_ids = fields.One2many('water.odometer.reading', 'property_unit_id', string='Water Odometer Readings')
     complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
     invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced')
+    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self._default_currency_id(),
+                                  required=True)
+    loan_amount = fields.Monetary(string='Loan Amount')
+    end_financier = fields.Many2one('financier.financier', string='End Financier',
+                                    domain="[('financier_type', '=', 'financier')]")
+    s_p_solicitor = fields.Many2one('financier.financier', string='S & P Solicitor',
+                                    domain="[('financier_type', '=', 'solicitor')]")
+    loan_solicitor = fields.Many2one('financier.financier', string='Loan Solicitor',
+                                     domain="[('financier_type', '=', 'solicitor')]")
+    date_purchase = fields.Date(string='Date of Purchase')
+    s_p_amount = fields.Monetary(string='S & P Amount')
+
+    def _default_currency_id(self):
+        return self.env.user.company_id.currency_id
 
     @api.depends('name', 'property_id.name')
     def _compute_complete_name(self):
