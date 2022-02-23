@@ -9,7 +9,7 @@ class WaterOdometerReading(models.Model):
     _order = 'date'
 
     property_unit_id = fields.Many2one('property.unit', string='Property')
-    tenant_id = fields.Many2one('res.partner', string='Property')
+    tenant_id = fields.Many2one('res.partner', string='Tenant')
     date = fields.Date(string='Date', required=True)
     reading = fields.Float(string='Reading')
     invoiced = fields.Boolean(string='Invoiced')
@@ -49,7 +49,7 @@ class WaterOdometerReadingHistory(models.Model):
     _order = 'date'
 
     property_unit_id = fields.Many2one('property.unit', string='Property Unit')
-    tenant_id = fields.Many2one('res.partner', string='Property')
+    tenant_id = fields.Many2one('res.partner', string='Tenant')
     date = fields.Date(string='Date', required=True)
     reading = fields.Float(string='Reading')
     invoiced = fields.Boolean(string='Invoiced')
