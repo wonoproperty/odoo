@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--    Financiers Views -->
+
+    <record id="financier_financier_view_form" model="ir.ui.view">
+        <field name="name">financier.financier.form.view</field>
+        <field name="model">financier.financier</field>
+        <field name="arch" type="xml">
+            <form string="Financiers">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="financier_type"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="financier_financier_view_tree" model="ir.ui.view">
+        <field name="name">financier.financier.tree.view</field>
+        <field name="model">financier.financier</field>
+        <field name="arch" type="xml">
+            <tree string="Financiers" editable="bottom">
+                <field name="name"/>
+                <field name="financier_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="financier_financier_view_action" model="ir.actions.act_window">
+        <field name="name">Financier</field>
+        <field name="res_model">financier.financier</field>
+        <field name="view_mode">tree,form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="financier_financier_view_tree"/>
+    </record>
+
+    <menuitem id="financier_financier_menu" name="Financier" groups="base.group_user"
+              parent="configuration_menu" action="financier_financier_view_action" sequence="2"/>
+</odoo>

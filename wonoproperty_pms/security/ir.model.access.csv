@@ -8,3 +8,4 @@ access_expense_type,access_expense_type_user,model_expense_type,base.group_user,
 access_property_tenant_wizard,access_property_tenant_wizard,model_property_tenant_wizard,base.group_user,1,1,1,1
 access_water_odometer_reading,access_water_odometer_reading,model_water_odometer_reading,base.group_user,1,1,1,1
 access_water_odometer_reading_history,access_water_odometer_reading_history,model_water_odometer_reading_history,base.group_user,1,1,1,1
+access_financier_financier,access_financier_financier,model_financier_financier,base.group_user,1,1,1,1
