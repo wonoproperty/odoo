@@ -14,10 +14,10 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_invoice"
-                            type="object"
-                            class="oe_stat_button"
-                            icon="fa-pencil-square-o"
-                            attrs="{'invisible': [('invoice_count', '=', 0)]}">
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o"
+                                attrs="{'invisible': [('invoice_count', '=', 0)]}">
                             <field name="invoice_count" widget="statinfo" string="Invoices"/>
                         </button>
                     </div>
@@ -66,6 +66,33 @@
                                     <button string='View Invoices' name="action_view_invoice" type="object" class="btn-primary" attrs="{'invisible': [('invoice_count', '=', 0)]}"/>
                                     <button string='View Water Readings' name="action_view_water_readings" type="object" class="btn-primary"  attrs="{'invisible': [('water_odometer_readings_count', '=', 0)]}"/>
                                 </tree>
+                                <form>
+                                    <group string="General Information">
+                                        <group>
+                                            <field name="property_unit_id"/>
+                                            <field name="date_start"/>
+                                            <field name="loan_amount"/>
+                                            <field name="s_p_amount"/>
+                                            <field name="end_financier"/>
+                                            <field name="currency_id" invisible="1"/>
+                                        </group>
+                                        <group>
+                                            <field name="tenant_id"/>
+                                            <field name="date_end"/>
+                                            <field name="loan_solicitor"/>
+                                            <field name="s_p_solicitor"/>
+                                            <field name="date_purchase"/>
+                                            <field name="invoice_count" invisible="1"/>
+                                            <field name="water_odometer_readings_count" invisible="1"/>
+                                        </group>
+                                    </group>
+                                    <group string="Invoices">
+                                        <field name="invoice_ids" nolabel="1" readonly="1"/>
+                                    </group>
+                                    <group string="Water Odometer Readings">
+                                        <field name="water_odometer_readings_ids" nolabel="1" readonly="1"/>
+                                    </group>
+                                </form>
                             </field>
                         </page>
                         <page name="water_reading" string="Water Odometer Reading">
