@@ -19,6 +19,16 @@ class TenantHistory(models.Model):
     invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced')
     water_odometer_readings_ids = fields.Many2many('water.odometer.reading.history', string='Water Odometer Readings')
     water_odometer_readings_count = fields.Integer(string='Water Odometer Readings Count', compute='_get_readings')
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True)
+    loan_amount = fields.Monetary(string='Loan Amount')
+    end_financier = fields.Many2one('financier.financier', string='End Financier',
+                                    domain="[('financier_type', '=', 'financier')]")
+    s_p_solicitor = fields.Many2one('financier.financier', string='S & P Solicitor',
+                                    domain="[('financier_type', '=', 'solicitor')]")
+    loan_solicitor = fields.Many2one('financier.financier', string='Loan Solicitor',
+                                     domain="[('financier_type', '=', 'solicitor')]")
+    date_purchase = fields.Date(string='Date of Purchase')
+    s_p_amount = fields.Monetary(string='S & P Amount')
 
     @api.depends('invoice_ids')
     def _get_invoiced(self):

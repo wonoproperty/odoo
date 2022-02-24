@@ -28,6 +28,13 @@ class PropertyTenantWizard(models.TransientModel):
                 'first_reading': reading.first_reading,
                 'date': reading.date,
             }))
+        currency_id = property_unit.currency_id.id
+        loan_amount = property_unit.loan_amount
+        end_financier = property_unit.end_financier.id
+        s_p_solicitor = property_unit.s_p_solicitor.id
+        loan_solicitor = property_unit.loan_solicitor.id
+        date_purchase = property_unit.date_purchase
+        s_p_amount = property_unit.s_p_amount
         property_unit.write({
             'tenant_ids': [
                 Command.create({
@@ -36,10 +43,23 @@ class PropertyTenantWizard(models.TransientModel):
                     'date_start': self.current_date_start,
                     'date_end': self.current_date_end,
                     'water_odometer_readings_ids': reading_vals,
-                    'invoice_ids': invoices
+                    'invoice_ids': invoices,
+                    'currency_id': currency_id,
+                    'loan_amount': loan_amount,
+                    'end_financier': end_financier,
+                    's_p_solicitor': s_p_solicitor,
+                    'loan_solicitor': loan_solicitor,
+                    'date_purchase': date_purchase,
+                    's_p_amount': s_p_amount,
                 })],
             'tenant_id': self.new_tenant_id.id,
             'date_start': self.new_date_start,
+            'loan_amount': None,
+            'end_financier': None,
+            's_p_solicitor': None,
+            'loan_solicitor': None,
+            'date_purchase': None,
+            's_p_amount': None,
         })
         property_unit.water_odometer_reading_ids.unlink()
         return {'type': 'ir.actions.act_window_close'}
