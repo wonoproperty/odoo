@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class AccountMoveProperty(models.Model):
@@ -15,4 +15,11 @@ class AccountMoveProperty(models.Model):
     date_to = fields.Date(string='Date To')
     tenant_history_id = fields.Many2one('tenant.history', string='Tenant History')
     amount_in_words = fields.Char(string="Amount In Words", compute='_amount_in_words')
+
+    @api.onchange('property_unit_id')
+    def onchange_property_unit(self):
+        for rec in self:
+            if rec.property_unit_id:
+                rec['partner_id'] = rec.property_unit_id.tenant_id
+                rec['invoice_payment_term_id'] = rec.partner_id.property_payment_term_id
 
