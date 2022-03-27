@@ -50,6 +50,7 @@
                                 <tree editable="bottom">
                                     <field name="expense_id"/>
                                     <field name="expense_frequency"/>
+                                    <field name="minimum_amount"/>
                                     <field name="fixed_amount"/>
                                     <field name="variable_amount"/>
                                 </tree>

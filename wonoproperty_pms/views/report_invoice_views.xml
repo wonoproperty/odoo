@@ -3,6 +3,8 @@
     <template id="report_invoice_document" inherit_id="account.report_invoice_document">
         <xpath expr="/t" position="replace">
             <t t-call="web.basic_layout">
+                <t t-set="o" t-value="o.with_context(lang=lang)" />
+                <t t-set="forced_vat" t-value="o.fiscal_position_id.foreign_vat"/> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
                 <link href="/wonoproperty_pms/static/src/css/layout.css" rel="stylesheet"/>
                 <div class="page">
                     <div class="row">
