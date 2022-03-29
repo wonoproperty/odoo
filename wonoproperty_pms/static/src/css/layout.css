@@ -1,0 +1,17 @@
+p, span {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.bold-text {
+    font-size: 14px;
+    font-weight: 800;
+}
+
+#th_description {
+    width: 40%;
+}
+
+#th_priceunit, #th_discount, #th_subtotal {
+    width: 20%;
+}

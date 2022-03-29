@@ -5,7 +5,7 @@
     'description': 'Add custom Property Management System for WonoProperty',
     'author': 'Maurice Jansz',
     'category': 'Property Management',
-    'version': '1.0.3',
+    'version': '1.0.7',
     'depends': ['account'],
     'data': [
         'data/expense_type_data.xml',
@@ -17,8 +17,14 @@
         'views/water_odometer_reading_views.xml',
         'views/res_partner_views.xml',
         'views/financier_financier_views.xml',
+        'views/report_invoice_views.xml',
         'security/ir.model.access.csv'
     ],
     'demo': [],
-    'license': 'LGPL-3'
+    'license': 'LGPL-3',
+    'assets': {
+        'web.assets_backend': [
+            'wonoproperty_pms/static/src/**/*',
+        ],
+    },
 }

@@ -198,7 +198,8 @@ class PropertyUnit(models.Model):
                                     prev_odometer_reading = 0 if not prev_odometer else prev_odometer[0].reading
                                     total_amount = (odometer[
                                                         0].reading - prev_odometer_reading) * line.variable_amount
-                                    amount = total_amount
+                                    minimum_amount = line.minimum_amount
+                                    amount = total_amount if total_amount > minimum_amount else minimum_amount
                                     invoice_date = odometer[0].date + relativedelta(days=1)
                                     account_move = self.env['account.move']
                                     account_move.create({
@@ -290,5 +291,6 @@ class UnitExpenseLine(models.Model):
     expense_frequency = fields.Selection([('monthly', 'Monthly'),
                                           ('quarterly', 'Quarterly'),
                                           ('yearly', 'Yearly')], string='Frequency', required=True)
+    minimum_amount = fields.Float(string='Minimum Amount')
     fixed_amount = fields.Float(string='Fixed Amount')
     variable_amount = fields.Float(string='Variable Amount')
