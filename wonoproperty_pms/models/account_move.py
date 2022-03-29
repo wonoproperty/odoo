@@ -23,7 +23,6 @@ class AccountMoveProperty(models.Model):
             if rec.property_unit_id:
                 rec.partner_id = rec.property_unit_id.tenant_id
                 rec.invoice_payment_term_id = rec.partner_id.property_payment_term_id
-                rec.partner_shipping_id = rec._get_invoice_delivery_partner_id()
 
     @api.model
     def create(self, vals):
