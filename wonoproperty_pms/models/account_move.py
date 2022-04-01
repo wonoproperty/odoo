@@ -38,11 +38,12 @@ class AccountMoveProperty(models.Model):
 
     def write(self, vals):
         res = super(AccountMoveProperty, self).write(vals)
-        if self.property_unit_id and self.property_expense_id and self.date_from and self.date_to:
-            invoices = self.search([('property_unit_id', '=', self.property_unit_id.id),
-                                    ('property_expense_id', '=', self.property_expense_id.id),
-                                    ('id', '!=', self.id)]).filtered(lambda x: x.date_from <= self.date_from <= x.date_to
-                                                                              or x.date_from <= self.date_to <= x.date_to)
-            if invoices:
-                raise UserError(_('There is another invoice with this expense for this period'))
+        for rec in self:
+            if rec.property_unit_id and rec.property_expense_id and rec.date_from and rec.date_to:
+                invoices = rec.search([('property_unit_id', '=', rec.property_unit_id.id),
+                                        ('property_expense_id', '=', rec.property_expense_id.id),
+                                        ('id', '!=', rec.id)]).filtered(lambda x: x.date_from <= rec.date_from <= x.date_to
+                                                                                  or x.date_from <= rec.date_to <= x.date_to)
+                if invoices:
+                    raise UserError(_('There is another invoice with this expense for this period'))
         return res
