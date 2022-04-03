@@ -210,6 +210,7 @@ class PropertyUnit(models.Model):
                                         'property_unit_id': rec.id,
                                         'date_from': from_date,
                                         'date_to': to_date,
+                                        'invoice_payment_term_id': rec.tenant_id.property_payment_term_id.id,
                                         'property_expense_id': line.expense_id.id,
                                         'invoice_line_ids': [
                                             Command.create({
