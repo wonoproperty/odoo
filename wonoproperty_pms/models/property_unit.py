@@ -134,6 +134,7 @@ class PropertyUnit(models.Model):
                                     'invoice_date': invoice_date,
                                     'property_unit_id': rec.id,
                                     'date_from': from_date,
+                                    'invoice_payment_term_id': rec.tenant_id.property_payment_term_id.id,
                                     'date_to': to_date,
                                     'property_expense_id': line.expense_id.id,
                                     'invoice_line_ids': [
