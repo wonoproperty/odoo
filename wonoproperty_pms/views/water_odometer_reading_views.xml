@@ -4,7 +4,7 @@
         <field name="name">water.odometer.reading.form.view</field>
         <field name="model">water.odometer.reading.history</field>
         <field name="arch" type="xml">
-            <form string="Water Odometer Readings">
+            <form string="Water Meter Readings">
                 <sheet>
                     <group string="Information">
                         <group>
@@ -37,7 +37,7 @@
     </record>
 
     <record id="water_odometer_reading_view_action" model="ir.actions.act_window">
-        <field name="name">Water Odometer Reading</field>
+        <field name="name">Water Meter Reading</field>
         <field name="res_model">water.odometer.reading.history</field>
         <field name="view_mode">tree,form</field>
         <field name="type">ir.actions.act_window</field>

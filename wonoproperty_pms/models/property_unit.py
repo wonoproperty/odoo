@@ -20,7 +20,7 @@ class PropertyUnit(models.Model):
     tenant_ids = fields.One2many('tenant.history', 'property_unit_id', string='Owner History')
     invoice_ids = fields.One2many('account.move', 'property_unit_id', string='Invoices')
     expense_ids = fields.One2many('unit.expense.line', 'property_unit_id', string='Expense Lines', copy=True)
-    water_odometer_reading_ids = fields.One2many('water.odometer.reading', 'property_unit_id', string='Water Odometer Readings')
+    water_odometer_reading_ids = fields.One2many('water.odometer.reading', 'property_unit_id', string='Water Meter Readings')
     complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
     invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced')
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self._default_currency_id(),

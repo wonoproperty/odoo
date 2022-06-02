@@ -58,5 +58,5 @@
     <menuitem id="wonoproperty_pms_menu" name="PMS" groups="base.group_user" web_icon="wonoproperty_pms,static/description/icon.png"/>
 
     <menuitem id="property_property_menu" name="Properties" groups="base.group_user"
-              parent="wonoproperty_pms_menu" action="property_property_view_action" sequence="1"/>
+              parent="wonoproperty_pms_menu" action="property_property_view_action" sequence="2"/>
 </odoo>

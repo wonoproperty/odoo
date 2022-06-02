@@ -14,7 +14,7 @@ class AccountMoveProperty(models.Model):
     property_expense_id = fields.Many2one('expense.type', string='Expense')
     date_from = fields.Date(string='Date From')
     date_to = fields.Date(string='Date To')
-    tenant_history_id = fields.Many2one('tenant.history', string='Tenant History')
+    tenant_history_id = fields.Many2one('tenant.history', string='Owner History')
     amount_in_words = fields.Char(string="Amount In Words", compute='_amount_in_words')
 
     @api.onchange('property_unit_id')

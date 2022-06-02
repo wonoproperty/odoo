@@ -56,7 +56,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page name="tenant" string="Tenant History">
+                        <page name="owner" string="Owner History">
                             <field name="tenant_ids" nolabel="1" readonly="1">
                                 <tree>
                                     <field name="tenant_id"/>
@@ -90,13 +90,13 @@
                                     <group string="Invoices">
                                         <field name="invoice_ids" nolabel="1" readonly="1"/>
                                     </group>
-                                    <group string="Water Odometer Readings">
+                                    <group string="Water Meter Readings">
                                         <field name="water_odometer_readings_ids" nolabel="1" readonly="1"/>
                                     </group>
                                 </form>
                             </field>
                         </page>
-                        <page name="water_reading" string="Water Odometer Reading">
+                        <page name="water_reading" string="Water Meter Reading">
                             <field name="water_odometer_reading_ids" nolabel="1">
                                 <tree editable="bottom">
                                     <field name="date"/>
@@ -133,5 +133,5 @@
     </record>
 
     <menuitem id="property_unit_menu" name="Property Units" groups="base.group_user"
-              parent="wonoproperty_pms_menu" action="property_unit_view_action" sequence="2"/>
+              parent="wonoproperty_pms_menu" action="property_unit_view_action" sequence="1"/>
 </odoo>
