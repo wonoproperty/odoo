@@ -214,8 +214,8 @@ class PropertyUnit(models.Model):
                                         'property_expense_id': line.expense_id.id,
                                         'invoice_line_ids': [
                                             Command.create({
-                                                'name': line.expense_id.name + ' (Reading for month is ' + "{:.2f}".format(odometer[0].reading) + ' - ' + "{:.2f}".format(prev_odometer_reading) + ' = ' +
-                                                        "{:.2f}".format(odometer[0].reading - prev_odometer_reading) + ')',
+                                                'name': line.expense_id.name + ' (Minimum charge RM10.00 / Quarter) (Reading for quarter is ' + "{:.2f}".format(odometer[0].reading) + ' - ' + "{:.2f}".format(prev_odometer_reading) + ' = ' +
+                                                        "{:.2f}".format(odometer[0].reading - prev_odometer_reading) + 'KL)',
                                                 'product_id': line.expense_id.product_id.id,
                                                 'price_unit': amount,
                                                 'quantity': 1,
