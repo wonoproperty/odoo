@@ -119,7 +119,6 @@
                 <field name="name"/>
                 <field name="property_id"/>
                 <field name="tenant_id"/>
-                <field name="date_start"/>
             </tree>
         </field>
     </record>
