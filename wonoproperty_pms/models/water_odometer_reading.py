@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 
 class WaterOdometerReading(models.Model):
     _name = 'water.odometer.reading'
-    _description = 'Water Odometer Reading'
+    _description = 'Water Meter Reading'
     _order = 'date'
 
     property_unit_id = fields.Many2one('property.unit', string='Property')
@@ -45,7 +45,7 @@ class WaterOdometerReading(models.Model):
 
 class WaterOdometerReadingHistory(models.Model):
     _name = 'water.odometer.reading.history'
-    _description = 'Water Odometer Reading'
+    _description = 'Water Meter Reading'
     _order = 'date'
 
     property_unit_id = fields.Many2one('property.unit', string='Property Unit')

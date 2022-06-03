@@ -7,7 +7,7 @@ class PropertyProperty(models.Model):
     _description = 'Property'
 
     name = fields.Char(string='Name', required=True)
-    owner_id = fields.Many2one('res.partner', string='Owner', required=True)
+    owner_id = fields.Many2one('res.partner', string='Property Owner', required=True)
     unit_ids = fields.One2many('property.unit', 'property_id', string='Units')
 
     def create_invoices(self):

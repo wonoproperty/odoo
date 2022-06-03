@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <form string="Property">
                 <header>
-                    <button string='Create Invoices' name="create_invoices" type="object" class="btn-primary"/>
+                    <button string='Auto Create Invoices' name="create_invoices" type="object" class="btn-primary"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -19,7 +19,6 @@
                         </div>
                     <group string="Information">
                         <group>
-                            <field name="owner_id"/>
                         </group>
                     </group>
                     <group string="Units">
@@ -27,7 +26,6 @@
                             <tree >
                                 <field name="name"/>
                                 <field name="tenant_id"/>
-                                <field name="date_start"/>
                             </tree>
                         </field>
                     </group>
@@ -42,7 +40,6 @@
         <field name="arch" type="xml">
             <tree string="Property Units">
                 <field name="name"/>
-                <field name="owner_id"/>
             </tree>
         </field>
     </record>
@@ -58,5 +55,5 @@
     <menuitem id="wonoproperty_pms_menu" name="PMS" groups="base.group_user" web_icon="wonoproperty_pms,static/description/icon.png"/>
 
     <menuitem id="property_property_menu" name="Properties" groups="base.group_user"
-              parent="wonoproperty_pms_menu" action="property_property_view_action" sequence="1"/>
+              parent="wonoproperty_pms_menu" action="property_property_view_action" sequence="2"/>
 </odoo>

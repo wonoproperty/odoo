@@ -2,72 +2,127 @@
 <odoo>
     <template id="report_invoice_document" inherit_id="account.report_invoice_document">
         <xpath expr="/t" position="replace">
-            <t t-call="web.basic_layout">
-                <t t-set="o" t-value="o.with_context(lang=lang)" />
-                <t t-set="forced_vat" t-value="o.fiscal_position_id.foreign_vat"/> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
-                <link href="/wonoproperty_pms/static/src/css/layout.css" rel="stylesheet"/>
-                <div class="page">
-                    <div class="row">
-                        <div class="col-4">
-                            <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 70px;"/>
-                        </div>
-                        <div class="col-4 offset-4">
-                            <h1 style="font-weight:900;">
-                                <t t-if="o.move_type == 'out_invoice' and o.state == 'posted'">Tax Invoice</t>
-                                <t t-if="o.move_type == 'out_invoice' and o.state == 'draft'">Draft Tax Invoice</t>
-                                <t t-if="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled Tax Invoice</t>
-                                <t t-if="o.move_type == 'out_refund'">Credit Note</t>
-                                <t t-if="o.move_type == 'in_refund'">Vendor Credit Note</t>
-                                <t t-if="o.move_type == 'in_invoice'">Vendor Bill</t>
-                            </h1>
-                        </div>
+        <t t-call="web.basic_layout">
+            <link href="/wonoproperty_pms/static/src/css/layout.css" rel="stylesheet"/>
+            <div class="page">
+                <div class="row">
+                    <div class="col-4">
+                        <!--<img t-att-src="'/logo.png;base64,'" t-att-title="res_company.name" style="max-width: 200px; max-height: 150px;"/>-->
+                        <img t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 60px;" alt="Logo"/>
                     </div>
-                    <br/>
-                    <div class="row">
-                        <div class="col-5">
-                            <p class="bold-text">
+                    <div class="col-4 offset-4">
+                        <h1 style="font-weight:900;" class="text-right">
+                            <t t-if="o.move_type == 'out_invoice' and o.state == 'posted'">INVOICE</t>
+                            <t t-if="o.move_type == 'out_invoice' and o.state == 'draft'">Draft Invoice</t>
+                            <t t-if="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</t>
+                            <t t-if="o.move_type == 'out_refund'">Credit Note</t>
+                            <t t-if="o.move_type == 'in_refund'">Vendor Credit Note</t>
+                            <t t-if="o.move_type == 'in_invoice'">Vendor Bill</t>
+                        </h1>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-5">
+                        <p class="bold-text">
                                 KINTOWN DEVELOPMENT SDN BHD
-                            </p>
-                            <p>
-                                REG: 261564-M
-                            </p>
-                            <p>
+                        </p>
+
+                        <p>
+                                Company Reg. No.: 261564-M
+                            <br/>
+                        </p>
+
+                        <p>
                                 NO. 153-155, 2ND FLOOR
-                                <br/>
+                            <br/>
                                 TAMAN SRI DAGANG
-                                <br/>
-                                97000 BINTULU, SARAWAK
-                            </p>
-                            <p>
-                                Phone: 086-337878
-                                <br/>
-                                Fax: 086-338493
-                                <br/>
-                                Email: parkcityresidences@yahoo.com
-                            </p>
-                        </div>
-                        <div class="col-6 offset-1">
-                            <table>
+                            <br/>
+                                97000, BINTULU, SARAWAK
+                        </p>
+
+                        <p>
+                            <table class="noborder" style="font-size:12px;">
                                 <tr>
-                                    <td><span>Property Unit:</span></td>
-                                    <td><span t-field="o.property_unit_id"/></td>
+                                    <td width="20%">Tel:</td>
+                                    <td>
+                                        <span>086-351582</span>
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td><span>Invoice Date:</span></td>
-                                    <td><span t-field="o.invoice_date"/></td>
+                                    <td width="20%">HP:</td>
+                                    <td>
+                                        <span>+60 12 858 3263</span>
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td><span>Invoice No:</span></td>
-                                    <td><span t-if="o.name != '/'" t-field="o.name"/></td>
-                                </tr>
-                                <tr>
-                                    <td><span>Payment Terms:</span></td>
-                                    <td><span t-field="o.invoice_payment_term_id.name"/></td>
+                                    <td width="20%">Email:</td>
+                                    <td>
+                                        <span>parkcityresidences@yahoo.com</span>
+                                    </td>
                                 </tr>
                             </table>
-                        </div>
+                        </p>
                     </div>
-                    <br/>
+                    <div class="col-4 offset-3">
+                        <table>
+                            <br/>
+                            <tr>
+                                <td width="40%">
+                                    <span>Property:</span>
+                                </td>
+                                <td>
+                                    <span style="font-weight:bold" t-field="o.property_unit_id.property_id.name"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="40%">
+                                    <span>Property Unit:</span>
+                                </td>
+                                <td>
+                                    <span t-field="o.property_unit_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="40%">
+                                    <span>Invoice No:</span>
+                                </td>
+                                <td>
+                                    <span t-if="o.name != '/'" t-field="o.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="40%">
+                                    <span>Invoice Date:</span>
+                                </td>
+                                <td>
+                                    <span t-field="o.invoice_date"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="40%">
+                                    <span>Payment Terms:</span>
+                                </td>
+                                <td>
+                                    <span t-field="o.invoice_payment_term_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="40%">
+                                    <span>For Period:</span>
+                                </td>
+                                <td>
+                                    <span t-field="o.date_from"/>
+ -                                    <span t-field="o.date_to"/>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+                <br/>
+
+                <div class="container">
                     <div class="row">
                         <div class="col-6">
                             <span class="bold-text">INVOICE TO</span>
@@ -83,145 +138,194 @@
                             </t>
                             <br/>
                             <t t-if="o.partner_id.zip">
-                                <span t-field="o.partner_id.zip"/>,
+                                <span t-field="o.partner_id.zip"/>
+,
                             </t>
                             <t t-if="o.partner_id.city">
                                 <span t-field="o.partner_id.city"/>
                             </t>
                             <t t-if="o.partner_id.state_id">
-                                ,<span t-field="o.partner_id.state_id.name"/>
+                                ,                                <span t-field="o.partner_id.state_id.name"/>
+                            </t>
+                            <br/>
+                            <span>
+                                <b>Email: </b>
+                            </span>
+                            <t t-if="o.partner_id.email">
+                                <span t-field="o.partner_id.email"/>
                             </t>
                         </div>
                     </div>
-                    <br/>
-                    <div>
-                        <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
-                        <table width="100%">
-                            <tr>
-                                <th id="th_description" class="text-left"><span class="bold-text">Item</span></th>
-                                <th id="th_priceunit" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span class="bold-text">Price</span></th>
-                                <th id="th_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span class="bold-text">Discount</span></th>
-                                <th id="th_subtotal" class="text-right">
-                                    <span class="bold-text">Amount</span>
-                                </th>
-                            </tr>
-                            <tbody>
-                                <t t-set="current_subtotal" t-value="0"/>
-                                <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
+                </div>
 
-                                <t t-foreach="lines" t-as="line">
-                                    <tr>
-                                        <t t-if="not line.display_type" name="account_invoice_line_accountable">
-                                            <td name="account_invoice_line_name"><span t-field="line.name" t-options="{'widget': 'text'}"/></td>
-                                            <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                                <span class="text-nowrap" t-field="line.price_unit"/>
-                                            </td>
-                                            <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                                <span class="text-nowrap" t-field="line.discount"/> %
-                                            </td>
-                                            <td class="text-right o_price_total">
-                                                <span class="text-nowrap" t-field="line.price_subtotal"/>
-                                            </td>
-                                        </t>
-                                        <t t-if="line.display_type == 'line_section'">
-                                            <td colspan="99">
-                                                <span t-field="line.name" t-options="{'widget': 'text'}"/>
-                                            </td>
-                                            <t t-set="current_section" t-value="line"/>
-                                            <t t-set="current_subtotal" t-value="0"/>
-                                        </t>
-                                        <t t-if="line.display_type == 'line_note'">
-                                            <td colspan="99">
-                                                <span t-field="line.name" t-options="{'widget': 'text'}"/>
-                                            </td>
-                                        </t>
-                                    </tr>
-                                </t>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <span t-field="o.amount_in_words"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-5 col-md-4'} ml-auto">
-                            <table class="table table-sm" style="page-break-inside: avoid;">
-                                <!--Tax totals-->
-                                <t t-set="tax_totals" t-value="json.loads(o.tax_totals_json)"/>
-                                <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
-                                    <tr class="border-black o_subtotal">
-                                        <td><span t-esc="subtotal['name']"/></td>
+                <br/>
+                <div>
+                    <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
+                    <table width="100%" class="table table-sm o_main_table">
+                        <tr>
+                            <th id="th_description" class="text-left">
+                                <span class="bold-text">Item Description</span>
+                            </th>
+                            <th id="th_priceqty" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                <span class="bold-text">Quantity</span>
+                            </th>
+                            <th id="th_priceunit" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                <span class="bold-text">Unit Price</span>
+                            </th>
+                            <!--<th id="th_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                <span class="bold-text">Discount</span>
+                            </th>-->
+                            <th id="th_subtotal" class="text-right">
+                                <span class="bold-text">Amount</span>
+                            </th>
+                        </tr>
+                        <tbody>
+                            <t t-set="current_subtotal" t-value="0"/>
+                            <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
 
-                                        <td class="text-right">
-                                            <span
-                                                    t-att-class="oe_subtotal_footer_separator"
-                                                    t-esc="subtotal['amount']"
-                                            />
+                            <t t-foreach="lines" t-as="line">
+                                <tr>
+                                    <t t-if="not line.display_type" name="account_invoice_line_accountable">
+                                        <td name="account_invoice_line_name" width="20%">
+                                            <span t-field="line.name" t-options="{'widget': 'text'}"/>
                                         </td>
-                                    </tr>
 
-                                    <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
-                                    <t t-call="account.tax_groups_totals"/>
-                                </t>
+                                        <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                            <span class="text-nowrap" t-field="line.quantity"/>
+                                        </td>
 
-                                <!--Total amount with all taxes-->
-                                <tr class="border-black o_total">
-                                    <td><span class="bold-text">Total</span></td>
+                                        <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                            <span class="text-nowrap" t-field="line.price_unit"/>
+                                        </td>
+                                        <!--<td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                            <span class="text-nowrap" t-field="line.discount"/>
+ %
+                                        </td>-->
+                                        <td class="text-right o_price_total">
+                                            <span class="text-nowrap" t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;:2}"/>
+                                        </td>
+                                    </t>
+                                    <t t-if="line.display_type == 'line_section'">
+                                        <td colspan="99">
+                                            <span t-field="line.name" t-options="{'widget': 'text'}"/>
+                                        </td>
+                                        <t t-set="current_section" t-value="line"/>
+                                        <t t-set="current_subtotal" t-value="0"/>
+                                    </t>
+                                    <t t-if="line.display_type == 'line_note'">
+                                        <td colspan="99">
+                                            <span t-field="line.name" t-options="{'widget': 'text'}"/>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row">
+                    <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-5 col-md-4'} ml-auto">
+                        <table class="table table-sm" style="page-break-inside: avoid;">
+                            <!--Tax totals-->
+                            <t t-set="tax_totals" t-value="json.loads(o.tax_totals_json)"/>
+                            <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
+                                <tr class="border-black o_subtotal">
+                                    <td>
+                                        <span t-esc="subtotal['name']"/>
+                                    </td>
+
                                     <td class="text-right">
-                                        <span t-esc="tax_totals['amount_total']"/>
+                                        <span t-att-class="oe_subtotal_footer_separator" t-esc="subtotal['amount']"/>
                                     </td>
                                 </tr>
-                                <!--Payments-->
-                                <t t-if="print_with_payments">
-                                    <t t-if="o.payment_state != 'invoicing_legacy'">
-                                        <t t-set="payments_vals" t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
-                                        <t t-foreach="payments_vals" t-as="payment_vals">
-                                            <tr>
-                                                <td>
-                                                    <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="payment_vals['date']" t-options='{"widget": "date"}'/></i>
-                                                </td>
-                                                <td class="text-right">
-                                                    <span t-esc="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                                </td>
-                                            </tr>
-                                        </t>
-                                        <t t-if="len(payments_vals) > 0">
-                                            <tr class="border-black">
-                                                <td><strong>Amount Due</strong></td>
-                                                <td class="text-right">
-                                                    <span t-field="o.amount_residual"/>
-                                                </td>
-                                            </tr>
-                                        </t>
+
+                                <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
+                                <t t-call="account.tax_groups_totals"/>
+                            </t>
+
+                            <!--Total amount with all taxes-->
+                            <tr class="border-black o_total">
+                                <td>
+                                    <span class="bold-text">Total</span>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="tax_totals['amount_total']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                </td>
+                            </tr>
+                            <!--Payments-->
+                            <t t-if="print_with_payments">
+                                <t t-if="o.payment_state != 'invoicing_legacy'">
+                                    <t t-set="payments_vals" t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
+                                    <t t-foreach="payments_vals" t-as="payment_vals">
+                                        <tr>
+                                            <td>
+                                                <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="payment_vals['date']" t-options="{&quot;widget&quot;: &quot;date&quot;}"/>
+                                                </i>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="payment_vals['amount']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="len(payments_vals) &gt; 0">
+                                        <tr class="border-black">
+                                            <td>
+                                                <span class="bold-text">Balance</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-field="o.amount_residual"/>
+                                            </td>
+                                        </tr>
                                     </t>
                                 </t>
-                                <t t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'">
-                                    <tr>
-                                        <td><span>Due Date:</span></td>
-                                        <td class="text-right"><span t-field="o.invoice_date_due"/></td>
-                                    </tr>
-                                </t>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <p>
-                            <span class="bold-text">Important</span>
-                            <br/>
-                            1. All cheques should be crossed and made payable to <span class="bold-text">KINTOWN DEVELOPMENT SDN BHD</span>
-                            <br/>
-                            2. Kindly credit your payment directly into our <span class="bold-text">MAYBANK ACC NO. 511177101625</span>
-                            <br/>
-                            3. All payment slips are required to be emailed to <span class="bold-text">parkcityresidences@yahoo.com</span> with the <span class="bold-text">Invoice Number</span> attached to avoid late payment interest.
-                            <br/>
-                            4. This document has been generated automatically and no signature is required.
-                        </p>
+                            </t>
+                            <t t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'">
+                                <tr class="border">
+                                    <td>
+                                        <span class="bold-text">Date Due</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="o.invoice_date_due"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
                     </div>
                 </div>
-            </t>
-        </xpath>
+
+                <br/>
+                <div class="row">
+                    <div class="col-12">
+                        <span class="bold-text">RINGGIT MALAYSIA: </span>
+                        <span style="text-transform:uppercase;" class="bold-text" t-field="o.amount_in_words"/>
+                        <span class="bold-text">&#160;ONLY</span>
+                    </div>
+                </div>
+
+                <br/>
+                <div class="row">
+                    <p>
+                        <span class="bold-text">Important</span>
+                        <br/>
+                            1. All cheques should be crossed and made payable to <b>KINTOWN DEVELOPMENT SDN BHD</b>
+                        <br/>
+                        <br/>
+                            2. Kindly credit your payment directly into our:
+
+                        <span style="color:red">
+                            <b>Maybank Account Number: 561172119527</b>
+                        </span>
+                        <br/>
+                        <br/>
+                            3. All payment slips are required to be emailed to <b>parkcityresidences@yahoo.com</b> with the <b>Invoice Number</b> attached to avoid late payment interest.
+                        <br/>
+                        <br/>
+                            4. This document has been generated automatically and no signature is required.
+                    </p>
+                </div>
+            </div>
+        </t>
+    </xpath>
     </template>
 
     <record id="paperformat_wonoproperty" model="report.paperformat">

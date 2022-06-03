@@ -9,16 +9,16 @@ import math
 
 class TenantHistory(models.Model):
     _name = 'tenant.history'
-    _description = 'Tenant History'
+    _description = 'Owner History'
 
     property_unit_id = fields.Many2one('property.unit', string='Property Unit')
-    tenant_id = fields.Many2one('res.partner', string='Current Tenant', required=True)
+    tenant_id = fields.Many2one('res.partner', string='Current Owner', required=True)
     date_start = fields.Date(string='Date Start', required=True)
     date_end = fields.Date(string='Date End')
     invoice_ids = fields.Many2many('account.move', string='Invoices')
     invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced')
-    water_odometer_readings_ids = fields.Many2many('water.odometer.reading.history', string='Water Odometer Readings')
-    water_odometer_readings_count = fields.Integer(string='Water Odometer Readings Count', compute='_get_readings')
+    water_odometer_readings_ids = fields.Many2many('water.odometer.reading.history', string='Water Meter Readings')
+    water_odometer_readings_count = fields.Integer(string='Water Meter Readings Count', compute='_get_readings')
     currency_id = fields.Many2one('res.currency', string='Currency', required=True)
     loan_amount = fields.Monetary(string='Loan Amount')
     end_financier = fields.Many2one('financier.financier', string='End Financier',
