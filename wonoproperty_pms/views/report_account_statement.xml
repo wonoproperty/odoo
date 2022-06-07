@@ -163,7 +163,7 @@
                                     </th>
                                 </tr>
                                 <tbody>
-<!--                                    <t t-set="lines" t-value="get_invoice_lines(o)"/>-->
+                                    <t t-set="lines" t-value="get_invoice_lines(o)"/>
                                 </tbody>
                             </table>
                         </div>
