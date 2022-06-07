@@ -8,7 +8,8 @@
         <field name="arch" type="xml">
             <form string="Property Unit">
                 <header>
-                    <button string='Update Tenant' name="action_open_tenant_wizard" type="object" class="btn-primary"/>
+                    <button string='Update Tenant' name="action_open_actual_tenant_wizard" type="object" class="btn-primary"/>
+                    <button string='Update Owner' name="action_open_tenant_wizard" type="object" class="btn-primary"/>
                     <button string='Auto Create Invoice' name="action_create_invoice" type="object" class="btn-primary"/>
                 </header>
                 <sheet>
@@ -94,6 +95,16 @@
                                         <field name="water_odometer_readings_ids" nolabel="1" readonly="1"/>
                                     </group>
                                 </form>
+                            </field>
+                        </page>
+                        <page name="tenant" string="Tenant History">
+                            <field name="actual_tenant_ids">
+                                <tree editable="bottom">
+                                    <field name="tenant_id"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="current_active"/>
+                                </tree>
                             </field>
                         </page>
                         <page name="water_reading" string="Water Meter Reading">

@@ -17,6 +17,28 @@ class AccountMoveProperty(models.Model):
     tenant_history_id = fields.Many2one('tenant.history', string='Owner History')
     amount_in_words = fields.Char(string="Amount In Words", compute='_amount_in_words')
 
+    @api.onchange('property_expense_id')
+    def onchange_property_expense(self):
+        if self.property_expense_id:
+            invoice_lines = [(5, 0, 0)]
+            fiscal_position = self.fiscal_position_id
+            accounts = self.property_expense_id.product_id.product_tmpl_id.get_product_accounts(
+                fiscal_pos=fiscal_position)
+            if self.is_sale_document(include_receipts=True):
+                # Out invoice.
+                account = accounts['income'] or self.account_id
+            else:
+                # In invoice.
+                account = accounts['expense'] or self.account_id
+            data = ({
+                'price_unit': 0.0,
+                'product_id': self.property_expense_id.product_id.id,
+                'name': self.property_expense_id.name,
+                'account_id': account.id,
+            })
+            invoice_lines.append((0, 0, data))
+            self.invoice_line_ids = invoice_lines
+
     @api.onchange('property_unit_id')
     def onchange_property_unit(self):
         for rec in self:

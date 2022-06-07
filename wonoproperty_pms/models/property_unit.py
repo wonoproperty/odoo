@@ -5,6 +5,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import calendar
 import math
+import time
 
 
 class PropertyUnit(models.Model):
@@ -34,6 +35,7 @@ class PropertyUnit(models.Model):
                                      domain="[('financier_type', '=', 'solicitor')]")
     date_purchase = fields.Date(string='Date of Purchase')
     s_p_amount = fields.Monetary(string='S & P Amount')
+    actual_tenant_ids = fields.One2many('actual.tenant.history', 'property_unit_id', string='Tenant History')
 
     def _default_currency_id(self):
         return self.env.user.company_id.currency_id
@@ -55,6 +57,26 @@ class PropertyUnit(models.Model):
         wizard_action = {
             'type': 'ir.actions.act_window',
             'res_model': 'property.tenant.wizard',
+            'name': _('Update Owner'),
+            'view_mode': 'form',
+            'context': ctx,
+            'target': 'new',
+        }
+        return wizard_action
+
+    def action_open_actual_tenant_wizard(self):
+        ctx = self.env.context.copy()
+        current_active_tenant = self.actual_tenant_ids.filtered(lambda x: x.current_active)
+        current_active = current_active_tenant.tenant_id.id if current_active_tenant else False
+        ctx.update({
+            'default_current_tenant_id': current_active,
+            'default_property_unit_id': self.id,
+            'default_current_date_start': current_active_tenant.date_start,
+            'default_current_date_end': current_active_tenant.date_end
+        })
+        wizard_action = {
+            'type': 'ir.actions.act_window',
+            'res_model': 'actual.tenant.wizard',
             'name': _('Update Tenant'),
             'view_mode': 'form',
             'context': ctx,
@@ -77,6 +99,7 @@ class PropertyUnit(models.Model):
                             # if not rec.date_end or invoice_date <= rec.date_end:
                             if frequency == 'quarterly':
                                 current_quarter = math.ceil(invoice_date.month / 3.)
+                                prefix = 'Q' + str(current_quarter)
                                 current_quarter_start_month = (current_quarter * 3) - 2
                                 current_quarter_end_month = current_quarter * 3
                                 current_quarter_start_date = datetime(invoice_date.year, current_quarter_start_month, 1
@@ -98,6 +121,7 @@ class PropertyUnit(models.Model):
                                     amount = line.fixed_amount
                             elif frequency == 'monthly':
                                 current_month = invoice_date.month
+                                prefix = 'M' + str(current_month)
                                 current_month_start_date = datetime(invoice_date.year, current_month, 1).date()
                                 current_month_end_date = datetime(invoice_date.year, current_month, calendar.monthrange(
                                     invoice_date.year, current_month)[1]).date()
@@ -115,6 +139,7 @@ class PropertyUnit(models.Model):
                             else:
                                 current_year_start = datetime(invoice_date.year, 1, 1).date()
                                 current_year_end = datetime(invoice_date.year, 12, 31).date()
+                                prefix = 'Y' + str(current_year_start.year)
                                 from_date = current_year_start
                                 to_date = current_year_end
                                 date_end = rec.date_end if rec.date_end and current_year_start <= rec.date_end <= current_year_end else to_date
@@ -126,6 +151,18 @@ class PropertyUnit(models.Model):
                                     amount = line.fixed_amount * remaining_days / total_days
                                 else:
                                     amount = line.fixed_amount
+                            management_fee = self.env.ref('wonoproperty_pms.management_fee')
+                            if line.expense_id.id != management_fee.id:
+                                invoice_line_name = line.expense_id.name
+                            else:
+                                if frequency == 'quarterly':
+                                    monthly_amount = amount / 3
+                                elif frequency == 'monthly':
+                                    monthly_amount = amount
+                                else:
+                                    monthly_amount = amount / 12
+                                invoice_line_name = prefix + ' Management Fee (RM' + "{:.2f}".format(
+                                    monthly_amount) + '/month)'
                             if invoice_date <= to_date:
                                 account_move = self.env['account.move']
                                 account_move.create({
@@ -140,7 +177,7 @@ class PropertyUnit(models.Model):
                                     'invoice_line_ids': [
                                         Command.create({
                                             'product_id': line.expense_id.product_id.id,
-                                            'name': line.expense_id.name,
+                                            'name': invoice_line_name,
                                             'price_unit': amount,
                                             'quantity': 1,
                                         })
@@ -245,6 +282,9 @@ class PropertyUnit(models.Model):
 
         context = {
             'default_move_type': 'out_invoice',
+            'default_partner_id': self.tenant_id.id,
+            'default_property_unit_id': self.id,
+            'default_invoice_payment_term_id': self.tenant_id.property_payment_term_id.id,
         }
         action['context'] = context
         return action
@@ -296,3 +336,26 @@ class UnitExpenseLine(models.Model):
     minimum_amount = fields.Float(string='Minimum Amount')
     fixed_amount = fields.Float(string='Fixed Amount')
     variable_amount = fields.Float(string='Variable Amount')
+
+
+class PropertyUnitAccountStatement(models.AbstractModel):
+    _name = 'report.wonoproperty_pms.report_account_statement'
+    _description = 'Property Unit Account Statement'
+
+    def _get_report_values(self, docids, data=None):
+        docs = self.env['property.unit'].browse(docids)
+        return {
+            'doc_ids': docs.ids,
+            'doc_model': 'property_unit',
+            'docs': docs,
+            'time': time,
+            'get_current_company': self._get_current_company,
+            'get_invoice_lines': self._get_invoice_lines
+        }
+
+    def _get_current_company(self):
+        company = self.env.company[0]
+        return company
+
+    def _get_invoice_lines(self, rec):
+        print(2)

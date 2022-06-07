@@ -7,6 +7,11 @@ class ResPartner(models.Model):
 
     property_unit_ids = fields.One2many('property.unit', 'tenant_id', string='Rooms')
     property_unit_count = fields.Integer(string='Property Unit Count', compute='_get_properties')
+    contact_type = fields.Selection([('owner', 'Owner'),
+                                     ('tenant', 'Tenant')], string='Contact Type')
+    date_start = fields.Date(string='Date Start')
+    date_end = fields.Date(string='Date End')
+    tenancy_agreement = fields.Char(string='Tenancy Agreement')
 
     @api.depends('property_unit_ids')
     def _get_properties(self):
