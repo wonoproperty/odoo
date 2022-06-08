@@ -11,6 +11,7 @@ import time
 class PropertyUnit(models.Model):
     _name = 'property.unit'
     _description = 'Property Unit'
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _rec_name = 'complete_name'
 
     name = fields.Char(string='Name', required=True)
@@ -323,6 +324,16 @@ class PropertyUnit(models.Model):
                 month_range.append((date_start, date_end))
         return month_range
 
+    def send_report_email(self):
+        for rec in self:
+            email_template_id = self.env.ref('wonoproperty_pms.email_template_account_statement').id
+            rec.with_context(force_send=True).message_post_with_template(
+                email_template_id, email_layout_xmlid='mail.mail_notification_light')
+
+    def print_statement(self):
+        for rec in self:
+            return rec.env.ref('wonoproperty_pms.report_account_statement').report_action(self)
+
 
 class UnitExpenseLine(models.Model):
     _name = 'unit.expense.line'
@@ -350,7 +361,8 @@ class PropertyUnitAccountStatement(models.AbstractModel):
             'docs': docs,
             'time': time,
             'get_current_company': self._get_current_company,
-            'get_invoice_lines': self._get_invoice_lines
+            'get_invoice_lines': self._get_invoice_lines,
+            'get_aging_line': self._get_aging_line
         }
 
     def _get_current_company(self):
@@ -358,4 +370,41 @@ class PropertyUnitAccountStatement(models.AbstractModel):
         return company
 
     def _get_invoice_lines(self, rec):
-        print(2)
+        lines = []
+        AccountMove = self.env['account.move']
+        for invoice in rec.invoice_ids.filtered(lambda x: x.state == 'posted'):
+            lines.append(invoice.id)
+            payments = AccountMove.search([('ref', '=', invoice.name)]).filtered(lambda x: x.state == 'posted')
+            if payments:
+                for payment in payments:
+                    lines.append(payment.id)
+        moves = AccountMove.search([('id', 'in', lines)], order='date asc')
+        return moves
+
+    def _get_aging_line(self, rec):
+        date_today = datetime.now().date()
+        total = 0.0
+        ninty = 0.0
+        sixty = 0.0
+        thirty = 0.0
+        twenty_eight = 0.0
+        fourteen = 0.0
+        current = 0.0
+        currency = self.env.company.currency_id
+        for invoice in rec.invoice_ids.filtered(lambda x: x.state == 'posted' and x.amount_residual > 0.0):
+            date_diff = (date_today - invoice.invoice_date_due).days
+            total += invoice.amount_residual
+            if date_diff >= 90:
+                ninty += invoice.amount_residual
+            elif date_diff >= 60:
+                sixty += invoice.amount_residual
+            elif date_diff >= 30:
+                thirty += invoice.amount_residual
+            elif date_diff >= 28:
+                twenty_eight += invoice.amount_residual
+            elif date_diff >= 14:
+                fourteen += invoice.amount_residual
+            else:
+                current += invoice.amount_residual
+        return [currency, current, fourteen, twenty_eight, thirty, sixty, ninty, total]
+

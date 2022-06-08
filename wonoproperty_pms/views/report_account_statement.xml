@@ -164,6 +164,146 @@
                                 </tr>
                                 <tbody>
                                     <t t-set="lines" t-value="get_invoice_lines(o)"/>
+                                    <t t-set="debit" t-value="0"/>
+                                    <t t-set="credit" t-value="0"/>
+                                    <t t-set="balance" t-value="0"/>
+                                    <t t-foreach="lines" t-as="line">
+                                        <tr>
+                                            <td name="invoice_date">
+                                                <span t-field="line.date"/>
+                                            </td>
+                                            <td  name="invoice_date">
+                                                <t t-if="line.move_type == 'out_invoice'">
+                                                    <span class="text-center" t-field="line.invoice_date_due"/>
+                                                </t>
+                                            </td>
+                                            <td name="invoice_number">
+                                                <span class="text-center" t-field="line.name"/>
+                                            </td>
+                                            <td name="item_description">
+                                                <t t-if="line.move_type == 'out_invoice'">
+                                                    <t t-if="len(line.invoice_line_ids) > 0">
+                                                        <span t-field="line.invoice_line_ids[0].name"/>
+                                                    </t>
+                                                </t>
+                                            </td>
+                                            <td name="invoice_from">
+                                                <t t-if="line.move_type == 'out_invoice'">
+                                                    <span class="text-center" t-field="line.date_from"/>
+                                                </t>
+                                            </td>
+                                            <td name="invoice_to">
+                                                <t t-if="line.move_type == 'out_invoice'">
+                                                    <span class="text-center" t-field="line.date_to"/>
+                                                </t>
+                                            </td>
+                                            <td name="invoice_debit">
+                                                <t t-if="line.move_type == 'out_invoice'">
+                                                    <span class="text-center" t-field="line.amount_total"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="text-center" t-esc="0.0" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                                                </t>
+                                            </td>
+                                            <td name="invoice_credit">
+                                                <t t-if="len(line.payment_id) > 0">
+                                                    <span class="text-center" t-field="line.amount_total"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="text-center" t-esc="0.0" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                                                </t>
+                                            </td>
+                                            <t t-if="line.move_type == 'out_invoice'">
+                                                <t t-set="balance" t-value="balance + line.amount_total"/>
+                                                <t t-set="debit" t-value="debit + line.amount_total"/>
+                                            </t>
+                                            <t t-elif="line.payment_id != False">
+                                                <t t-set="balance" t-value="balance - line.amount_total"/>
+                                                <t t-set="credit" t-value="credit + line.amount_total"/>
+                                            </t>
+                                            <td name="invoice_balance">
+                                                <span class="text-center" t-esc="balance" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr t-if="len(lines) > 0">
+                                       <td colspan="4">
+                                       </td>
+                                        <td colspan="2">
+                                           <strong class="text-right">
+                                               Grand Total
+                                           </strong>
+                                       </td>
+                                        <td>
+                                           <strong class="text-center">
+                                               <span class="text-center" t-esc="debit" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                                           </strong>
+                                       </td>
+                                        <td>
+                                           <strong class="text-center">
+                                               <span class="text-center" t-esc="credit" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                                           </strong>
+                                       </td>
+                                        <td>
+                                           <strong class="text-center">
+                                               <span class="text-center" t-esc="balance" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                                           </strong>
+                                       </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br/>
+                        <div>
+                            <table width="100%" class="table table-sm o_main_table">
+                                <tr>
+                                    <th id="th_current" class="text-center">
+                                        <span class="bold-text">Current</span>
+                                    </th>
+                                    <th id="th_fourteen" class="text-center">
+                                        <span class="bold-text">14 Days</span>
+                                    </th>
+                                    <th id="th_twenty_eight" class="text-center">
+                                        <span class="bold-text">28 Days</span>
+                                    </th>
+                                    <th id="th_thirty" class="text-center">
+                                        <span class="bold-text">30 Days</span>
+                                    </th>
+                                    <th id="th_sixty" class="text-center">
+                                        <span class="bold-text">60 Days</span>
+                                    </th>
+                                    <th id="th_ninety" class="text-center">
+                                        <span class="bold-text">90 Days &amp; Over</span>
+                                    </th>
+                                    <th id="th_total" class="text-center">
+                                        <span class="bold-text">Total Amount</span>
+                                    </th>
+                                </tr>
+                                <tbody>
+                                    <t t-set="aging_line" t-value="get_aging_line(o)"/>
+                                    <tr>
+                                        <td class="text-center">
+                                            <span class="text-center" t-esc="aging_line[1]" t-options='{"widget": "monetary", "display_currency": aging_line[0]}'/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-center" t-esc="aging_line[2]" t-options='{"widget": "monetary", "display_currency": aging_line[0]}'/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-center" t-esc="aging_line[3]" t-options='{"widget": "monetary", "display_currency": aging_line[0]}'/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-center" t-esc="aging_line[4]" t-options='{"widget": "monetary", "display_currency": aging_line[0]}'/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-center" t-esc="aging_line[5]" t-options='{"widget": "monetary", "display_currency": aging_line[0]}'/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-center" t-esc="aging_line[6]" t-options='{"widget": "monetary", "display_currency": aging_line[0]}'/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-center" t-esc="aging_line[7]" t-options='{"widget": "monetary", "display_currency": aging_line[0]}'/>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
