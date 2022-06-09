@@ -24,7 +24,7 @@
                                 <!--<img t-att-src="'/logo.png;base64,'" t-att-title="res_company.name" style="max-width: 200px; max-height: 150px;"/>-->
                                 <img t-att-src="image_data_uri(company.logo)" style="max-height: 60px;" alt="Logo"/>
                             </div>
-                            <div class="col-5 offset-3">
+                            <div class="col-6 offset-2">
                                 <h1 style="font-weight:900;" class="text-right">
                                     Account Statement
                                 </h1>
