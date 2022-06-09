@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 import calendar
 import math
 import time
+import json
 
 
 class PropertyUnit(models.Model):
@@ -374,10 +375,13 @@ class PropertyUnitAccountStatement(models.AbstractModel):
         AccountMove = self.env['account.move']
         for invoice in rec.invoice_ids.filtered(lambda x: x.state == 'posted'):
             lines.append(invoice.id)
-            payments = AccountMove.search([('ref', '=', invoice.name)]).filtered(lambda x: x.state == 'posted')
-            if payments:
-                for payment in payments:
-                    lines.append(payment.id)
+            invoice_payments = json.loads(invoice.invoice_payments_widget)
+            journal_entries = AccountMove.search([('payment_id', '!=', False)])
+            if invoice_payments:
+                for payment in invoice_payments['content']:
+                    display_name = payment['ref']
+                    journal_entry = journal_entries.filtered(lambda x: x.display_name == display_name)
+                    lines.append(journal_entry.id)
         moves = AccountMove.search([('id', 'in', lines)], order='date asc')
         return moves
 
