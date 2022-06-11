@@ -10,8 +10,10 @@
             </xpath>
 
             <xpath expr="//field[@name='invoice_date']" position="after">
-                <field name="date_from" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')"/>
-                <field name="date_to" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')"/>
+                <field name="date_from" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')"
+                attrs="{'required': [('property_expense_id','!=',False)]}"/>
+                <field name="date_to" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')"
+                attrs="{'required': [('property_expense_id','!=',False)]}"/>
                 <field name="property_expense_id" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')"/>
             </xpath>
 
