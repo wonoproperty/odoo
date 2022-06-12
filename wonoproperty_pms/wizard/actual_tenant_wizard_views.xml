@@ -4,16 +4,16 @@
         <field name="name">actual.tenant.wizard.form.view</field>
         <field name="model">actual.tenant.wizard</field>
         <field name="arch" type="xml">
-            <form string="Property Owner Update">
+            <form string="Property Tenant Update">
                 <group>
-                    <group string="Last Owner">
+                    <group string="Last Tenant">
                         <field name="current_tenant_id" readonly="1"/>
                         <field name="current_date_start" readonly="1"/>
                         <field name="current_date_end"/>
                     </group>
                 </group>
                 <group>
-                    <group string="New Owner">
+                    <group string="New Tenant">
                         <field name="new_tenant_id"/>
                         <field name="new_date_start"/>
                     </group>
@@ -27,7 +27,7 @@
     </record>
 
     <record id="action_actual_tenant_wizard" model="ir.actions.act_window">
-        <field name="name">Property Owner Wizard</field>
+        <field name="name">Property Tenant Wizard</field>
         <field name="res_model">actual.tenant.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
