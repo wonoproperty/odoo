@@ -9,7 +9,7 @@
     'depends': ['web', 'account'],
     'data': [
         'data/expense_type_data.xml',
-        'data/mail_template_data.xml',
+
         'views/property_property_views.xml',
         'views/property_unit_views.xml',
         'wizard/property_tenant_wizard_views.xml',
@@ -21,6 +21,7 @@
         'views/financier_financier_views.xml',
         'views/report_invoice_views.xml',
         'views/report_account_statement.xml',
+        'data/mail_template_data.xml',
         'security/ir.model.access.csv'
     ],
     'demo': [],
