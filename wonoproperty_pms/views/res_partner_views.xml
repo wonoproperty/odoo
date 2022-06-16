@@ -16,9 +16,11 @@
             </xpath>
             <xpath expr="//span[@name='address_name']" position="before">
                 <field name="contact_type"/>
-                <field name="tenancy_agreement"/>
-                <field name="date_start"/>
-                <field name="date_end"/>
+                <field name="tenancy_agreement" readonly="1" attrs="{'invisible': [('contact_type', '!=', 'tenant')]}"/>
+                <field name="date_start" attrs="{'invisible': [('contact_type', '!=', 'tenant')]}"/>
+                <field name="date_end" attrs="{'invisible': [('contact_type', '!=', 'tenant')]}"/>
+                <separator/>
+                <separator/>
             </xpath>
         </field>
     </record>
