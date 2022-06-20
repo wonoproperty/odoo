@@ -19,7 +19,6 @@
                         </div>
                     <group string="Information">
                         <group>
-                            <field name="owner_id"/>
                         </group>
                     </group>
                     <group string="Units">

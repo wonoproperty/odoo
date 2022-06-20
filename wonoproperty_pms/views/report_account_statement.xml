@@ -24,9 +24,9 @@
                                 <!--<img t-att-src="'/logo.png;base64,'" t-att-title="res_company.name" style="max-width: 200px; max-height: 150px;"/>-->
                                 <img t-att-src="image_data_uri(company.logo)" style="max-height: 60px;" alt="Logo"/>
                             </div>
-                            <div class="col-5 offset-3">
+                            <div class="col-6 offset-2">
                                 <h1 style="font-weight:900;" class="text-right">
-                                    Account Statement
+                                    STATEMENT
                                 </h1>
                             </div>
                         </div>
@@ -73,7 +73,41 @@
                                     </table>
                                 </p>
                             </div>
-                            <div class="col-4 offset-3">
+                            <div class="col-1"></div>
+                            <div class="col-3">
+                                <br/>
+                                <span class="bold-text">INVOICE TO</span>
+                                <br/>
+                                <span t-field="o.tenant_id.name"/>
+                                <t t-if="o.tenant_id.street">
+                                    <br/>
+                                    <span t-field="o.tenant_id.street"/>
+                                </t>
+                                <t t-if="o.tenant_id.street2">
+                                    <br/>
+                                    <span t-field="o.tenant_id.street2"/>
+                                </t>
+                                <br/>
+                                <t t-if="o.tenant_id.zip">
+                                    <span t-field="o.tenant_id.zip"/>
+                                        ,
+                                </t>
+                                <t t-if="o.tenant_id.city">
+                                    <span t-field="o.tenant_id.city"/>
+                                </t>
+                                <t t-if="o.tenant_id.state_id">
+                                        ,                                    <span t-field="o.tenant_id.state_id.name"/>
+                                </t>
+                                <br/>
+                                <span>
+                                    <b>Email: </b>
+                                </span>
+                                <t t-if="o.tenant_id.email">
+                                    <span t-field="o.tenant_id.email"/>
+                                </t>
+                            </div>
+
+                            <div class="col-3">
                                 <table width="100%">
                                     <br/>
                                     <tr>
@@ -81,7 +115,7 @@
                                             <span>Property:</span>
                                         </td>
                                         <td>
-                                            <span style="font-weight:bold" t-field="o.property_id.name"></span>
+                                            <span style="font-weight:bold" t-field="o.property_id.name"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -95,53 +129,22 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-6">
-                                    <span class="bold-text">INVOICE TO</span>
-                                    <br/>
-                                    <span t-field="o.tenant_id.name"/>
-                                    <t t-if="o.tenant_id.street">
-                                        <br/>
-                                        <span t-field="o.tenant_id.street"/>
-                                    </t>
-                                    <t t-if="o.tenant_id.street2">
-                                        <br/>
-                                        <span t-field="o.tenant_id.street2"/>
-                                    </t>
-                                    <br/>
-                                    <t t-if="o.tenant_id.zip">
-                                        <span t-field="o.tenant_id.zip"/>
-                                        ,
-                                    </t>
-                                    <t t-if="o.tenant_id.city">
-                                        <span t-field="o.tenant_id.city"/>
-                                    </t>
-                                    <t t-if="o.tenant_id.state_id">
-                                        ,                                <span t-field="o.tenant_id.state_id.name"/>
-                                    </t>
-                                    <br/>
-                                    <span>
-                                        <b>Email: </b>
-                                    </span>
-                                    <t t-if="o.tenant_id.email">
-                                        <span t-field="o.tenant_id.email"/>
-                                    </t>
-                                </div>
-                            </div>
-                        </div>
+                        <br/>
+
+
+
                         <br/>
                         <div>
                             <table width="100%" class="table table-sm o_main_table">
                                 <tr>
-                                    <th id="th_invoice_date" class="text-center">
-                                        <span class="bold-text">Invoice Date</span>
+                                    <th id="th_invoice_date" class="text-left">
+                                        <span class="bold-text">Date</span>
                                     </th>
-                                    <th id="th_due_date" class="text-center">
+                                    <th id="th_due_date" class="text-left">
                                         <span class="bold-text">Due Date</span>
                                     </th>
-                                    <th id="th_invoice_no" class="text-center">
-                                        <span class="bold-text">Invoice No</span>
+                                    <th id="th_invoice_no" class="text-left">
+                                        <span class="bold-text">Reference</span>
                                     </th>
                                     <th id="th_description" class="text-left">
                                         <span class="bold-text">Item Description</span>
@@ -164,6 +167,143 @@
                                 </tr>
                                 <tbody>
                                     <t t-set="lines" t-value="get_invoice_lines(o)"/>
+                                    <t t-set="debit" t-value="0"/>
+                                    <t t-set="credit" t-value="0"/>
+                                    <t t-set="balance" t-value="0"/>
+                                    <t t-foreach="lines" t-as="line">
+                                        <tr>
+                                            <td name="invoice_date">
+                                                <span t-field="line.date"/>
+                                            </td>
+                                            <td name="invoice_date">
+                                                <t t-if="line.move_type == 'out_invoice'">
+                                                    <span class="text-center" t-field="line.invoice_date_due"/>
+                                                </t>
+                                            </td>
+                                            <td name="invoice_number">
+                                                <span class="text-center" t-field="line.name"/>
+                                            </td>
+                                            <td name="item_description">
+                                                <t t-if="line.move_type == 'out_invoice'">
+                                                    <t t-if="len(line.invoice_line_ids) &gt; 0">
+                                                        <span t-field="line.invoice_line_ids[0].name"/>
+                                                    </t>
+                                                </t>
+                                            </td>
+                                            <td name="invoice_from">
+                                                <t t-if="line.move_type == 'out_invoice'">
+                                                    <span class="text-center" t-field="line.date_from"/>
+                                                </t>
+                                            </td>
+                                            <td name="invoice_to">
+                                                <t t-if="line.move_type == 'out_invoice'">
+                                                    <span class="text-center" t-field="line.date_to"/>
+                                                </t>
+                                            </td>
+                                            <td name="invoice_debit">
+                                                <t t-if="line.move_type == 'out_invoice'">
+                                                    <span class="text-center" t-field="line.amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;:2}"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="text-center" t-esc="0.0" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;:2}"/>
+                                                </t>
+                                            </td>
+                                            <td name="invoice_credit">
+                                                <t t-if="len(line.payment_id) &gt; 0">
+                                                    <span class="text-center" t-field="line.amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;:2}"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="text-center" t-esc="0.0" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;:2}"/>
+                                                </t>
+                                            </td>
+                                            <t t-if="line.move_type == 'out_invoice'">
+                                                <t t-set="balance" t-value="balance + line.amount_total"/>
+                                                <t t-set="debit" t-value="debit + line.amount_total"/>
+                                            </t>
+                                            <t t-elif="line.payment_id != False">
+                                                <t t-set="balance" t-value="balance - line.amount_total"/>
+                                                <t t-set="credit" t-value="credit + line.amount_total"/>
+                                            </t>
+                                            <td name="invoice_balance">
+                                                <span class="text-center" t-esc="balance" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;:2}"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr t-if="len(lines) &gt; 0">
+                                        <td colspan="4">
+                                        </td>
+                                        <td colspan="2">
+                                            <strong class="text-right">
+                                               Grand Total
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <strong class="text-center">
+                                                <span class="text-center" t-esc="debit" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: line.currency_id}"/>
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <strong class="text-center">
+                                                <span class="text-center" t-esc="credit" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: line.currency_id}"/>
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <strong class="text-center">
+                                                <span class="text-center" t-esc="balance" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: line.currency_id}"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br/>
+                        <div>
+                            <table width="100%" class="table table-sm o_main_table">
+                                <b>ACCOUNT OUTSTANDING SUMMARY</b>
+                                <tr>
+                                    <th id="th_current" class="text-center">
+                                        <span class="bold-text">Current</span>
+                                    </th>
+                                    <th id="th_fourteen" class="text-center">
+                                        <span class="bold-text">14 Days</span>
+                                    </th>
+
+                                    <th id="th_thirty" class="text-center">
+                                        <span class="bold-text">30 Days</span>
+                                    </th>
+                                    <th id="th_sixty" class="text-center">
+                                        <span class="bold-text">60 Days</span>
+                                    </th>
+                                    <th id="th_ninety" class="text-center">
+                                        <span class="bold-text">90 Days &amp; Over</span>
+                                    </th>
+                                    <th id="th_total" class="text-center">
+                                        <span class="bold-text">Total Amount</span>
+                                    </th>
+                                </tr>
+                                <tbody>
+                                    <t t-set="aging_line" t-value="get_aging_line(o)"/>
+                                    <tr>
+                                        <td class="text-center">
+                                            <span class="text-center" t-esc="aging_line[1]" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;:2, &quot;display_currency&quot;: aging_line[0]}"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-center" t-esc="aging_line[2]" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;:2, &quot;display_currency&quot;: aging_line[0]}"/>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span class="text-center" t-esc="aging_line[4]" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;:2, &quot;display_currency&quot;: aging_line[0]}"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-center" t-esc="aging_line[5]" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;:2, &quot;display_currency&quot;: aging_line[0]}"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-center" t-esc="aging_line[6]" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;:2, &quot;display_currency&quot;: aging_line[0]}"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-center" t-esc="aging_line[7]" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: aging_line[0]}"/>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

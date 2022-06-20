@@ -5,7 +5,7 @@
     'description': 'Add custom Property Management System for WonoProperty',
     'author': 'Maurice Jansz',
     'category': 'Property Management',
-    'version': '1.0.10',
+    'version': '1.0.12',
     'depends': ['web', 'account'],
     'data': [
         'data/expense_type_data.xml',

@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 import calendar
 import math
 import time
+import json
 
 
 class PropertyUnit(models.Model):
@@ -361,7 +362,8 @@ class PropertyUnitAccountStatement(models.AbstractModel):
             'docs': docs,
             'time': time,
             'get_current_company': self._get_current_company,
-            'get_invoice_lines': self._get_invoice_lines
+            'get_invoice_lines': self._get_invoice_lines,
+            'get_aging_line': self._get_aging_line
         }
 
     def _get_current_company(self):
@@ -369,4 +371,44 @@ class PropertyUnitAccountStatement(models.AbstractModel):
         return company
 
     def _get_invoice_lines(self, rec):
-        print(2)
+        lines = []
+        AccountMove = self.env['account.move']
+        for invoice in rec.invoice_ids.filtered(lambda x: x.state == 'posted'):
+            lines.append(invoice.id)
+            invoice_payments = json.loads(invoice.invoice_payments_widget)
+            journal_entries = AccountMove.search([('payment_id', '!=', False)])
+            if invoice_payments:
+                for payment in invoice_payments['content']:
+                    display_name = payment['ref']
+                    journal_entry = journal_entries.filtered(lambda x: x.display_name == display_name)
+                    lines.append(journal_entry.id)
+        moves = AccountMove.search([('id', 'in', lines)], order='date asc')
+        return moves
+
+    def _get_aging_line(self, rec):
+        date_today = datetime.now().date()
+        total = 0.0
+        ninty = 0.0
+        sixty = 0.0
+        thirty = 0.0
+        twenty_eight = 0.0
+        fourteen = 0.0
+        current = 0.0
+        currency = self.env.company.currency_id
+        for invoice in rec.invoice_ids.filtered(lambda x: x.state == 'posted' and x.amount_residual > 0.0):
+            date_diff = (date_today - invoice.invoice_date_due).days
+            total += invoice.amount_residual
+            if date_diff >= 90:
+                ninty += invoice.amount_residual
+            elif date_diff >= 60:
+                sixty += invoice.amount_residual
+            elif date_diff >= 30:
+                thirty += invoice.amount_residual
+            elif date_diff >= 28:
+                twenty_eight += invoice.amount_residual
+            elif date_diff >= 14:
+                fourteen += invoice.amount_residual
+            else:
+                current += invoice.amount_residual
+        return [currency, current, fourteen, twenty_eight, thirty, sixty, ninty, total]
+
