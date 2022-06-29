@@ -39,7 +39,7 @@
     </record>
 
     <menuitem id="configuration_menu" name="Configuration" groups="base.group_user"
-              parent="wonoproperty_pms_menu" sequence="3"/>
+              parent="wonoproperty_pms_menu" sequence="99"/>
     <menuitem id="expense_type_menu" name="Expense Types" groups="base.group_user"
               parent="configuration_menu" action="expense_type_view_action" sequence="1"/>
 </odoo>

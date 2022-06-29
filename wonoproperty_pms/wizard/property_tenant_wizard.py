@@ -6,7 +6,7 @@ class PropertyTenantWizard(models.TransientModel):
     _name = 'property.tenant.wizard'
     _description = 'Property Owner Wizard'
 
-    current_tenant_id = fields.Many2one('res.partner', string='Current Owner', required=True)
+    current_tenant_id = fields.Many2one('res.partner', string='Current Owner', required=False, ondelete='cascade')
     current_date_start = fields.Date(string='Date Start')
     current_date_end = fields.Date(string='Date End')
     new_tenant_id = fields.Many2one('res.partner', string='New Owner', required=True)
@@ -15,14 +15,15 @@ class PropertyTenantWizard(models.TransientModel):
 
     def update_tenant(self):
         property_unit = self.property_unit_id
-        invoices = property_unit.invoice_ids.filtered(lambda x: x.partner_id.id == self.current_tenant_id.id and
+        current_tenant_id = self.current_tenant_id.id if self.current_tenant_id else False
+        invoices = property_unit.invoice_ids.filtered(lambda x: x.partner_id.id == current_tenant_id and
                                                                 x.property_unit_id.id == property_unit.id)
-        water_readings = property_unit.water_odometer_reading_ids.filtered(lambda x: x.tenant_id.id == self.current_tenant_id.id and
+        water_readings = property_unit.water_odometer_reading_ids.filtered(lambda x: x.tenant_id.id == current_tenant_id and
                                                                                      x.property_unit_id.id == property_unit.id)
         reading_vals = []
         for reading in water_readings:
             reading_vals.append(Command.create({
-                'tenant_id': self.current_tenant_id.id,
+                'tenant_id': current_tenant_id,
                 'property_unit_id': property_unit.id,
                 'reading': reading.reading,
                 'first_reading': reading.first_reading,
@@ -39,7 +40,7 @@ class PropertyTenantWizard(models.TransientModel):
             'tenant_ids': [
                 Command.create({
                     'property_unit_id': property_unit.id,
-                    'tenant_id': self.current_tenant_id.id,
+                    'tenant_id': current_tenant_id,
                     'date_start': self.current_date_start,
                     'date_end': self.current_date_end,
                     'water_odometer_readings_ids': reading_vals,

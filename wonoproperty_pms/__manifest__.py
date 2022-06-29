@@ -9,11 +9,11 @@
     'depends': ['web', 'account'],
     'data': [
         'data/expense_type_data.xml',
-
         'views/property_property_views.xml',
         'views/property_unit_views.xml',
         'wizard/property_tenant_wizard_views.xml',
         'wizard/actual_tenant_wizard_views.xml',
+        'wizard/aged_receivable_report_views.xml',
         'views/expense_type_views.xml',
         'views/account_move_views.xml',
         'views/water_odometer_reading_views.xml',
