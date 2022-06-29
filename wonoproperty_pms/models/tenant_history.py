@@ -13,7 +13,7 @@ class TenantHistory(models.Model):
 
     property_unit_id = fields.Many2one('property.unit', string='Property Unit')
     tenant_id = fields.Many2one('res.partner', string='Current Owner')
-    date_start = fields.Date(string='Date Start', required=True)
+    date_start = fields.Date(string='Date Start', required=False)
     date_end = fields.Date(string='Date End')
     invoice_ids = fields.Many2many('account.move', string='Invoices')
     invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced')
