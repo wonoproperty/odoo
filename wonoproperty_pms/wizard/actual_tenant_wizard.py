@@ -6,7 +6,7 @@ class ActualTenantWizard(models.TransientModel):
     _name = 'actual.tenant.wizard'
     _description = 'Actual Owner Wizard'
 
-    current_tenant_id = fields.Many2one('res.partner', string='Current Tenant', required=True)
+    current_tenant_id = fields.Many2one('res.partner', string='Current Tenant')
     current_date_start = fields.Date(string='Date Start')
     current_date_end = fields.Date(string='Date End')
     new_tenant_id = fields.Many2one('res.partner', string='New Tenant', required=True)
