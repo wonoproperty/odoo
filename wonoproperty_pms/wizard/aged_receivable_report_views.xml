@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--Create wizard to generate report-->
+    <record id="aged_receivable_report_wizard_view_form" model="ir.ui.view">
+        <field name="name">aged.receivable.report.wizard.view.form</field>
+        <field name="model">aged.receivable.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Aged Receivable Report">
+                <div class="o_row">
+                    <group>
+                        <group>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </div>
+                <footer>
+                    <button name="print_report_xls" string="Print XLS" type="object" default_focus="1" class="eo_highlight"/>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!--action for wizard to generate report-->
+    <record id="aged_receivable_report_wizard_action" model="ir.actions.act_window">
+        <field name="name">Aged Receivable Report</field>
+        <field name="res_model">aged.receivable.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="aged_receivable_report_wizard_view_form"/>
+    </record>
+
+    <!--wizard to download report-->
+    <record id="xlsx_print_wizard_view_form" model="ir.ui.view">
+        <field name="name">xlsx.print.wizard.view.form</field>
+        <field name="model">xlsx.print.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Report Download">
+                <separator colspan="4" string="Please save file as .xls excel format"/>
+                <field name="name" invisible="1"/>
+                <field name="xls_output" filename='name'/>
+                <footer>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <menuitem id="reports_menu" name="Reporting" parent="wonoproperty_pms_menu"/>
+    <menuitem id="account_summary_report_wizard_menu" name="Aged Receivable"
+              action="aged_receivable_report_wizard_action" parent="reports_menu" sequence="98"/>
+</odoo>
