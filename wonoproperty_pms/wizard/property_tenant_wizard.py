@@ -9,8 +9,8 @@ class PropertyTenantWizard(models.TransientModel):
     current_tenant_id = fields.Many2one('res.partner', string='Current Owner', required=False, ondelete='cascade')
     current_date_start = fields.Date(string='Date Start')
     current_date_end = fields.Date(string='Date End')
-    new_tenant_id = fields.Many2one('res.partner', string='New Owner', required=True)
-    new_date_start = fields.Date(string='Start of New Tenancy', required=True)
+    new_tenant_id = fields.Many2one('res.partner', string='New Owner', required=False)
+    new_date_start = fields.Date(string='Start of New Tenancy', required=False)
     property_unit_id = fields.Many2one('property.unit', string='Property Unit')
 
     def update_tenant(self):
