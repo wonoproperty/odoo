@@ -59,7 +59,7 @@
                             </field>
                         </page>
                         <page name="owner" string="Owner History">
-                            <field name="tenant_ids" nolabel="1" readonly="1">
+                            <field name="tenant_ids" nolabel="1" readonly="0">
                                 <tree>
                                     <field name="tenant_id"/>
                                     <field name="date_start"/>
