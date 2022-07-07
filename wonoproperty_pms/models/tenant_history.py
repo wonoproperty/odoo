@@ -19,7 +19,7 @@ class TenantHistory(models.Model):
     invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced')
     water_odometer_readings_ids = fields.Many2many('water.odometer.reading.history', string='Water Meter Readings')
     water_odometer_readings_count = fields.Integer(string='Water Meter Readings Count', compute='_get_readings')
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True)
+    currency_id = fields.Many2one('res.currency', string='Currency')
     loan_amount = fields.Monetary(string='Loan Amount')
     end_financier = fields.Many2one('financier.financier', string='End Financier',
                                     domain="[('financier_type', '=', 'financier')]")
