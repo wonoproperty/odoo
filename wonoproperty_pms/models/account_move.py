@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+import io
+import base64
+from zipfile import ZipFile, ZIP_DEFLATED
 
 
 class AccountMoveProperty(models.Model):
@@ -63,9 +66,34 @@ class AccountMoveProperty(models.Model):
         for rec in self:
             if rec.property_unit_id and rec.property_expense_id and rec.date_from and rec.date_to:
                 invoices = rec.search([('property_unit_id', '=', rec.property_unit_id.id),
-                                        ('property_expense_id', '=', rec.property_expense_id.id),
-                                        ('id', '!=', rec.id)]).filtered(lambda x: x.date_from <= rec.date_from <= x.date_to
-                                                                                  or x.date_from <= rec.date_to <= x.date_to)
+                                       ('property_expense_id', '=', rec.property_expense_id.id),
+                                       ('id', '!=', rec.id)]).filtered(lambda x: x.date_from <= rec.date_from <= x.date_to
+                                                                                 or x.date_from <= rec.date_to <= x.date_to)
                 if invoices:
                     raise UserError(_('There is another invoice with this expense for this period'))
         return res
+
+    def print_invoice_zip(self):
+        zip_buffer = io.BytesIO()
+        attachments = self.env['ir.attachment'].search([('name', '=', 'Invoices.zip')])
+        attachments.unlink()
+        for rec in self:
+            data = self.env.ref('account.account_invoices').sudo()._render_qweb_pdf([rec.id])[0]
+            invoice_name = ((rec.state == 'posted') and ((rec.name or 'INV').replace('/','_')+'.pdf')) or \
+                           ('Draft Invoice (_ ' + str(rec.id)+ ').pdf')
+            with ZipFile(zip_buffer, 'a', ZIP_DEFLATED, False) as zip_file:
+                zip_file.writestr(invoice_name, data)
+        attachment = self.env['ir.attachment'].create({
+            'name': 'Invoices.zip',
+            'datas': base64.encodebytes(zip_buffer.getvalue()),
+            'mimetype': 'application/x-zip-compressed',
+        })
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        download_url = '/web/content/' + str(attachment.id) + '?download=true'
+        return {
+            'name': 'Invoice Zip',
+            'type': 'ir.actions.act_url',
+            'url': str(base_url) + str(download_url),
+            'target': 'self',
+        }
+
