@@ -38,6 +38,7 @@ class PropertyUnit(models.Model):
     date_purchase = fields.Date(string='Date of Purchase')
     s_p_amount = fields.Monetary(string='S & P Amount')
     actual_tenant_ids = fields.One2many('actual.tenant.history', 'property_unit_id', string='Tenant History')
+    active = fields.Boolean('Active', default=True)
 
     def _default_currency_id(self):
         return self.env.user.company_id.currency_id
