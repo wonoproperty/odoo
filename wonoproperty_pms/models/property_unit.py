@@ -164,7 +164,7 @@ class PropertyUnit(models.Model):
                                     monthly_amount = amount
                                 else:
                                     monthly_amount = amount / 12
-                                invoice_line_name = prefix + ' Management Fee (RM' + "{:.2f}".format(
+                                invoice_line_name = prefix + ' Maintenance Charges (RM' + "{:.2f}".format(
                                     monthly_amount) + '/month)'
                             if invoice_date <= to_date:
                                 account_move = self.env['account.move']
