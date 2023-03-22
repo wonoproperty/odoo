@@ -98,7 +98,7 @@ class PropertyUnit(models.Model):
                         invoice_date = rec.date_start if not last_invoice else last_invoice[0].date_to + relativedelta(days=1)
                         date_today = datetime.now().date()
                         date_end = rec.date_end
-                        if date_today >= invoice_date:
+                        if date_today <= invoice_date:
                             # if not rec.date_end or invoice_date <= rec.date_end:
                             if frequency == 'quarterly':
                                 current_quarter = math.ceil(invoice_date.month / 3.)
